@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Batch - Vulture Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Batch";
+        var mkdocs_page_input_path = "2. Running on AWS Cloud/3_Batch.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Vulture Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Welcome</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">1. Running on local computer</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../1.%20Running%20on%20local%20computer/1_Quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../1.%20Running%20on%20local%20computer/2_Commandline/">Command line</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../1.%20Running%20on%20local%20computer/3_Docker/">Docker</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../1.%20Running%20on%20local%20computer/4_Nextflow/">Nextflow</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">2. Running on AWS Cloud</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../1_Setup/">Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../2_Nextflow/">Nextflow</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Batch</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#batch-enviroment">Batch Enviroment</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#0-create-a-launch-template">0. Create a launch template</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#1-setup-batch-vulture-compute-environment-1">1. Setup Batch Vulture Compute Environment 1</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-setup-batch-vulture-compute-environment-2">2. Setup Batch Vulture Compute Environment 2</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#monitoring-batch-job">Monitoring Batch Job</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#0-view-results">0. View results</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#1-view-pricing-of-the-program">1. View pricing of the program</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#batch-queue">Batch Queue</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#0-setup-batch-vulture-job-queue-1">0. Setup Batch Vulture Job Queue 1</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#1-setup-batch-vulture-job-queue-2">1. Setup Batch Vulture Job Queue 2</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../4_RunVulture/">Running Vulture on AWS cloud with Nextflow</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Supplementary</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Supplementary/Launchtemp/">Launch template Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Supplementary/Supplementary/">Supplementary</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Vulture Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>2. Running on AWS Cloud &raquo;</li>
+      <li>Batch</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="overview">Overview</h1>
+<p>AWS Batch enables developers, scientists, and engineers to easily and efficiently run hundreds of thousands of batch computing jobs on AWS. AWS Batch dynamically provisions the optimal quantity and type of computational resources (e.g., CPU or memory optimized instances) based on the volume and specific resource requirements of the batch jobs submitted. With AWS Batch, there is no need to install and manage batch computing software or server clusters that you use to run your jobs, allowing you to focus on analyzing results and solving problems. AWS Batch plans, schedules, and executes your batch computing workloads across the full range of AWS compute services and features, such as AWS Fargate, Amazon EC2, and Spot Instances.</p>
+<p>There is no additional charge for AWS Batch. You only pay for the AWS resources (e.g. EC2 instances) you create to store and run your batch jobs.</p>
+<p>In our tutorial, the pipeline of Nextflow and Batch deal with jobs by the following workflow automatically：</p>
+<ol>
+<li>We configure and run Nextflow script to trigger a submission to the job queue.</li>
+<li>The AWS Batch scheduler runs periodically to check for jobs in the job queue</li>
+<li>Once jobs are placed, the scheduler evaluates the Compute Environments and adjusts the compute capacity to allow the jobs to run.</li>
+<li>The job (packaged by the container) will run in the computational environment created.</li>
+<li>The job output will be transferred and stored in the S3 bucket.</li>
+</ol>
+<h2 id="batch-enviroment">Batch Enviroment</h2>
+<h3 id="0-create-a-launch-template">0. Create a launch template</h3>
+<p>Before you create an AWS Batch Compute Environment, please kindly refer to <a href="https://juychen.github.io/docs/6_Cloud/RunVulture.html">how to create Vulture launch template</a> to create a launch template first.</p>
+<h3 id="1-setup-batch-vulture-compute-environment-1">1. Setup Batch Vulture Compute Environment 1</h3>
+<p>Create an AWS Batch Environment at <a href="https://console.aws.amazon.com/batch/home">AWS Batch Home</a>.</p>
+<p>On the AWS Batch dashboard:
+1) Select "Compute environments" on the left panel
+2) Select "Create" to create a new compute environments</p>
+<p><img alt="Image" src="../../src/img/Batch/Vulture 3-1 Create Batch CE.png" /></p>
+<p>In the Compute Environments page, set your preference of the compute environment as follows:
+Step 1 Compute environment configuration
+3) Select "Managed" in the compute environment orchestration type
+4) Change the Name in the compute environment name. We suggest that you should use "scvh-CE-r5a4x".
+5) Select "vulture-iam-role" in the Service role (<a href="https://juychen.github.io/docs/2_Setup/SetupIAM.html">IAM role settings</a>). 
+6) Select "ecsInstanceRole" in the Instance role. 
+<img alt="Image" src="../../src/img/Batch/Vulture 3-2 Compute Environment Configuration.png" /></p>
+<p>Step 2 Instance configuration
+7) Select "Use EC2 Spot Instances" for cost-saving</p>
+<p><img alt="Image" src="../../src/img/Batch/Vulture 3-3 Instance Configuration vCPU.png" /></p>
+<p>8) Set "0" in both Minium and Desired vCPU settings, and 256 in Maximum CPUs -required
+9) Scoll down to the "Additional configuration".</p>
+<p>10) Select "optimal" in the Allowed instance type.
+11) Select "SPOT_CAPACITY_OPTIMIZED" in the allocation strategy</p>
+<p><img alt="Image" src="../../src/img/Batch/Vulture 3-4 Use Spot Instances and select Spot Optimized.png" /></p>
+<p>12) Select "vulture-launch-template" under Launch template. For how to create this template beforehand. Please refer to <a href="https://juychen.github.io/docs/10_Supplementary/Launchtemp.html">launch template</a>. </p>
+<p>We apply this template to every instance Batch schedules for us because we have mentioned in the previous section that the default  storage of EC2 instance is not enough for the Vulture pipeline, this template will provide extra spaces for our Batch job's instance. </p>
+<p>Step 3 Network configuration
+13) Select "Default for VPC" under the Virtual Private Cloud (VPC) ID, this will select the <a href="https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html">default VPCs</a>. Note that all AWS accounts comes with a default VPC for use in each Region. A default VPC comes with a public subnet in each Availability Zone, an internet gateway, and settings to enable DNS resolution. Therefore, you can immediately start launching Amazon EC2 instances into a default VPC. A default VPC is suitable for getting started quickly.</p>
+<p><img alt="Image" src="../../src/img/Batch/Vulture 4-3 Select Network Configuration for 2nd Queue.png" /></p>
+<p>Leave other settings of the environment as default and create an environment.</p>
+<h3 id="2-setup-batch-vulture-compute-environment-2">2. Setup Batch Vulture Compute Environment 2</h3>
+<p>This basically follows the same steps as to create Compute Environment 1 above, but with different name and instance type, to enable massively parallel processing of Vulture tasks with Batch.</p>
+<p>1) Select "Compute environments" on the left panel
+2) Select "Create" to create a new compute environments</p>
+<p><img alt="Image" src="../../src/img/Batch/Vulture 4-1 Create second CE.png" />
+<img alt="Image" src="../../src/img/Batch/Vulture 4-2 Configure 2nd CE.png" /></p>
+<p>Repeat the configuration steps from Step 2. to Step 13 to finish create Compute Environment 2 used for creating Compute Environment 1 above.</p>
+<h2 id="monitoring-batch-job">Monitoring Batch Job</h2>
+<p>Heading back to the <a href="https://console.aws.amazon.com/batch/home#dashboard">Batch Home dashboard</a>, you can see the overview of the number of tasks running in the job queue. To monitor your running jobs, you can click the number below the label "RUNNING".</p>
+<p>Here, you can find the job submited previously. Click the job name to go to the job information page.</p>
+<p><img alt="Image" src="../../src/img/Nextflow/Vulture 7-2 Successful Nextflow job run.png" /></p>
+<p>Inside the information page, you can click the link below the "Log stream name" label. This is where the output of the program stored. It will record any information output within the stand output stream of the console. Also, the console output will refresh continuously along with your program process.</p>
+<h3 id="0-view-results">0. View results</h3>
+<p>You can select go the <a href="https://s3.console.aws.amazon.com/s3/home">S3 Bucket</a>. Looking into the path: "s3://${BUCKET_NAME_RESULTS}/batchD/{SAMPLE_ID}/alignment_outs/" page. Click to open it. The Vulture results should look like in the picture below: </p>
+<p><img alt="Image" src="../../src/img/Nextflow/Vulture 7-4 Vulture results in S3.png" /></p>
+<h3 id="1-view-pricing-of-the-program">1. View pricing of the program</h3>
+<p>To check the bill of our previous run, we can go to the EC2 Dashboard and find the Spot Request section at <a href="https://console.aws.amazon.com/ec2sp/v2/home#/spot">https://console.aws.amazon.com/ec2sp/v2/home#/spot</a>. Click saving summary to view the cost we saved by applying spot instances.</p>
+<p><img alt="Image" src="../../src/img/Batch/Batch-price1.jpg" /></p>
+<p>This saving summary page shows the price. We know that to align a 12GB scRNA-Seq sample takes $0.17. Thanks to the spot instances, we can save 79% of money compared to hosting an on-demand EC2 instance.</p>
+<p><img alt="Image" src="../../src/img/Batch/Batch-price2.jpg" /></p>
+<h2 id="batch-queue">Batch Queue</h2>
+<h3 id="0-setup-batch-vulture-job-queue-1">0. Setup Batch Vulture Job Queue 1</h3>
+<p>We can return back to the home page of Batch at: <a href="https://us-east-2.console.aws.amazon.com/batch/home">https://us-east-2.console.aws.amazon.com/batch/home</a>.</p>
+<p>1) Select "Job queues" on the left panel
+2) Select "Create" to create a new job queue</p>
+<p><img alt="Image" src="../../src/img/Batch/Vulture 5-2 Start to create job queue.png" /></p>
+<p>3) Name your job queue to according to your preference.</p>
+<p>4) Select your compute environment to which you created in the previous chapter i.e. <a href="https://juychen.github.io/docs/4_Batch/BatchEnvironment.html">Batch Environment</a></p>
+<p><img alt="Image" src="../../src/img/Batch/Vulture 5-1 Select CE in job queue.png" /></p>
+<p>5) Select "Create" to create a new job queue</p>
+<h3 id="1-setup-batch-vulture-job-queue-2">1. Setup Batch Vulture Job Queue 2</h3>
+<p>We can return back to the home page of <a href="https://us-east-2.console.aws.amazon.com/batch/home">Batch</a>. Create a Job Queue 2 for parallel processing of Vulture tasks by repeating the same steps from Step 1 to Step 4 used to create Job Queue 1 above.</p>
+<div class="code-example" markdown="1">
+[Previous Step](https://juychen.github.io/docs/5_Cloud/Nextflow.html){: .btn }
+[Next Step](https://juychen.github.io/docs/6_Local/Localrun.html){: .btn .btn-purple }
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../2_Nextflow/" class="btn btn-neutral float-left" title="Nextflow"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../4_RunVulture/" class="btn btn-neutral float-right" title="Running Vulture on AWS cloud with Nextflow">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../2_Nextflow/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../4_RunVulture/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
