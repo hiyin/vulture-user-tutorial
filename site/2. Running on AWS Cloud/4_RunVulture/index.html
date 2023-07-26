@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Running Vulture on AWS cloud with Nextflow - Vulture Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Running Vulture on AWS cloud with Nextflow";
+        var mkdocs_page_input_path = "2. Running on AWS Cloud/4_RunVulture.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Vulture Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Welcome</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">1. Running on local computer</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../1.%20Running%20on%20local%20computer/1_Quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../1.%20Running%20on%20local%20computer/2_Commandline/">Command line</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../1.%20Running%20on%20local%20computer/3_Nextflow/">Nextflow</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../1.%20Running%20on%20local%20computer/4_Docker/">Docker</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">2. Running on AWS Cloud</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../1_Setup/">Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../2_Nextflow/">Nextflow</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../3_Batch/">Batch</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Running Vulture on AWS cloud with Nextflow</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#setup-the-aws-cli">Setup the AWS CLI</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#clone-vulture-source-code">Clone Vulture source code</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#create-s3-bucket-to-store-results">Create S3 Bucket to store results</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#run-vulture-pipeline-1-build-genome-reference">Run Vulture pipeline - 1. Build Genome reference</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#run-vulture-pipeline-2-start-main-analysis">Run Vulture pipeline - 2. Start main analysis</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">3. Building your reference genome</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../3.%20Building%20your%20reference%20genome/1_Build/">1 Build</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Supplementary</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Supplementary/Launchtemp/">Launch template Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Supplementary/Supplementary/">Supplementary</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Vulture Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>2. Running on AWS Cloud &raquo;</li>
+      <li>Running Vulture on AWS cloud with Nextflow</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="nextflow-and-scrna-seq-processing">Nextflow and scRNA-Seq processing</h1>
+<hr />
+<h2 id="setup-the-aws-cli">Setup the AWS CLI</h2>
+<p>Install the AWS CLI and prepare the access key and secret access key ahead by following instructions at <a href="https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html">Obtaining AWS Credentials</a>.</p>
+<pre><code class="language-shell">pip install awscli
+aws configure
+# here will prompt you to enter access key and secret access key
+</code></pre>
+<h2 id="clone-vulture-source-code">Clone Vulture source code</h2>
+<p>Clone the source code of Vulture into your local computer</p>
+<pre><code class="language-shell">git clone https://github.com/holab-hku/Vulture.git
+# change into directory below
+cd Vulture/nextflow
+# checkout the branch below for most updated code
+git checkout cloud-new-junyi
+</code></pre>
+<h2 id="create-s3-bucket-to-store-results">Create S3 Bucket to store results</h2>
+<pre><code class="language-shell"># specify bucket names and save them into bash environment variables
+export BUCKET_NAME_TEMP=vulture-temp
+export BUCKET_NAME_RESULTS=vulture-results
+echo &quot;BUCKET_NAME_TEMP=${BUCKET_NAME_TEMP}&quot; |tee -a ~/.bashrc
+echo &quot;BUCKET_NAME_RESULTS=${BUCKET_NAME_RESULTS}&quot; |tee -a ~/.bashrc
+# create S3 buckets with specified bucket names 
+aws --region ${AWS_REGION} s3 mb s3://${BUCKET_NAME_TEMP}
+aws --region ${AWS_REGION} s3 mb s3://${BUCKET_NAME_RESULTS}
+</code></pre>
+<h2 id="run-vulture-pipeline-1-build-genome-reference">Run Vulture pipeline - 1. Build Genome reference</h2>
+<p>Now we are about to run the first step of the Vulture pipeline i.e. mkref (genome reference making), execute the command below in your favourite terminal or powershell and wait it to be finished</p>
+<pre><code class="language-shell">nextflow run scvh_mkref.nf -profile mkref -bucket-dir s3://${BUCKET_NAME_TEMP} --outdir=s3://${BUCKET_NAME_RESULTS}/batchA -with-report mkref_$(date +%s).html -bg &amp;&gt;&gt; mkref_$(date +%s).log;
+</code></pre>
+<p>The input data required for mkref stage are available in the downloadable links below, you can save them into your own S3 bucket folder:</p>
+<p><a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/humangenome/hg38.fa">hg38.fa</a>
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/humangenome/hg38.unique_gene_names.gtf">hg38.unique_gene_names.gtf</a>
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/humangenome/prokaryotes.csv">prokaryotes.csv</a>
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/humangenome/viruSITE_human_host.txt">viruSITE_human_host.txt</a></p>
+<p>Also you can generate the files yourself following instructions below:</p>
+<p><a href="http://virusite.org/index.php?nav=search&amp;fields=1&amp;query1=Human&amp;wc1=on&amp;field1=virus.host&amp;search=Search&amp;query2=&amp;wc2=on&amp;field2=virus.name&amp;query3=&amp;wc3=on&amp;field3=virus.name&amp;search_nav=virus&amp;sort=name&amp;order=asc&amp;rows=25&amp;page=1">VirusSITE</a>
+(viruSITE human host)
+Click "Format: CSV"</p>
+<p><a href="https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/">NCBI Prokaryotes</a>
+Filters -&gt; Host (Homo sapiens) -&gt; Assembly level (Complete) -&gt; RefSeq category (representative) -&gt; Download [prokaryotes.csv]</p>
+<p>After the mkref job is done, you need to edit line in "nextflow/nextflow.config" file -&gt; "params.ref" to the actual S3 path where your output reference genome files are i.e. in "s3://${BUCKET_NAME_RESULTS}/batchA" or you could download from the downloadable links below and store them into your own S3 bucket folder:
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf">human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf</a>
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa">human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa</a>
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf">human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf</a>
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa">human_host_viruses.viruSITE.with_hg38.fa</a></p>
+<pre><code class="language-shell">...
+mkref {
+aws.region = 'us-east-2'
+process.container = 'public.ecr.aws/b6a4h2a6/scvh_mkref:latest'
+process.executor = 'awsbatch'
+process.queue = 'vulture-stdq'
+# this line needs to be changed
+params.ref = 's3://vulture-reference/humangenome/'
+}
+...
+
+</code></pre>
+<h2 id="run-vulture-pipeline-2-start-main-analysis">Run Vulture pipeline - 2. Start main analysis</h2>
+<p>Before we start our analysis, we need to edit "nextflow/params.yaml" file to include the reads of your interest. Here is a snippet of how the "params.yaml" file looks like</p>
+<pre><code class="language-shell">...
+soloStrand: &quot;Forward&quot;
+alignment: &quot;STAR&quot;
+technology: &quot;10XV2&quot;
+virus_database: &quot;viruSITE&quot;
+soloMultiMappers: &quot;EM&quot;
+soloFeatures: &quot;GeneFull&quot;
+inputformat: &quot;bam&quot;
+soloInputSAMattrBarcodeSeq: &quot;CB UB&quot;
+barcodes_whitelist: &quot;None&quot;
+reads: 
+- &quot;SRR6885502&quot;
+- &quot;SRR6885503&quot;
+- &quot;SRR6885504&quot;
+- &quot;SRR6885505&quot;
+- &quot;SRR6885506&quot;
+- &quot;SRR6885507&quot;
+- &quot;SRR6885508&quot;
+...
+</code></pre>
+<p>Execute the command below to start the main analysis of Vulture.</p>
+<pre><code class="language-shell">nextflow run scvh_full.nf -profile batchfull -params-file params.yaml -bucket-dir s3://${BUCKET_NAME_TEMP} --outdir=s3://${BUCKET_NAME_RESULTS}/batchD -with-report report_bam_$(date +%s).html -bg &amp;&gt;&gt; submitnf_bam_$(date +%s).log
+</code></pre>
+<div class="code-example" markdown="1">
+[Previous Step](https://juychen.github.io/docs/3_Nextflow/NextflowInstall.html){: .btn }
+[Next Step](https://juychen.github.io/docs/6_Local/Localusage.html){: .btn .btn-purple }
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../3_Batch/" class="btn btn-neutral float-left" title="Batch"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../3.%20Building%20your%20reference%20genome/1_Build/" class="btn btn-neutral float-right" title="1 Build">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../3_Batch/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../3.%20Building%20your%20reference%20genome/1_Build/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
