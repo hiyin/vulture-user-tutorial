@@ -4,121 +4,110 @@ title: Docker
 parent: Localrun
 nav_order: 4
 ---
+# Run Vulture on local machines using docker 
 
-# Download Docker image
-
-# Nextflow and scRNA-Seq processing
-
----
-## Setup the AWS CLI
-
-Install the AWS CLI and prepare the access key and secret access key ahead by following instructions at [Obtaining AWS Credentials](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html).
+The following instructions are for running Vulture on local machines using docker. The instructions are tested on the following system:
 
 ```shell
-pip install awscli
-aws configure
-# here will prompt you to enter access key and secret access key
+Distributor ID: Ubuntu
+Description:    Ubuntu 22.04.2 LTS
+Release:        22.04
+Codename:       jammy
 ```
 
-## Clone Vulture source code
+## Install docker    
 
-Clone the source code of Vulture into your local computer
+Place holder for docker installation
 
-```shell
-git clone https://github.com/holab-hku/Vulture.git
-# change into directory below
-cd Vulture/nextflow
-# checkout the branch below for most updated code
-git checkout cloud-new-junyi
-```
+## Specify docker container in Nextflow config file
 
-## Create S3 Bucket to store results
-
-```shell
-# specify bucket names and save them into bash environment variables
-export BUCKET_NAME_TEMP=vulture-temp
-export BUCKET_NAME_RESULTS=vulture-results
-echo "BUCKET_NAME_TEMP=${BUCKET_NAME_TEMP}" |tee -a ~/.bashrc
-echo "BUCKET_NAME_RESULTS=${BUCKET_NAME_RESULTS}" |tee -a ~/.bashrc
-# create S3 buckets with specified bucket names 
-aws --region ${AWS_REGION} s3 mb s3://${BUCKET_NAME_TEMP}
-aws --region ${AWS_REGION} s3 mb s3://${BUCKET_NAME_RESULTS}
-```
-
-## Run Vulture pipeline - 1. Build Genome reference
-
-Now we are about to run the first step of the Vulture pipeline i.e. mkref (genome reference making), execute the command below in your favourite terminal or powershell and wait it to be finished
-
-```shell
-nextflow run scvh_mkref.nf -profile mkref -bucket-dir s3://${BUCKET_NAME_TEMP} --outdir=s3://${BUCKET_NAME_RESULTS}/batchA -with-report mkref_$(date +%s).html -bg &>> mkref_$(date +%s).log;
-```
-
-The input data required for mkref stage are available in the downloadable links below, you can save them into your own S3 bucket folder:
-
-[hg38.fa](https://vulture-reference.s3.ap-east-1.amazonaws.com/humangenome/hg38.fa)
-[hg38.unique_gene_names.gtf](https://vulture-reference.s3.ap-east-1.amazonaws.com/humangenome/hg38.unique_gene_names.gtf)
-[prokaryotes.csv](https://vulture-reference.s3.ap-east-1.amazonaws.com/humangenome/prokaryotes.csv)
-[viruSITE_human_host.txt](https://vulture-reference.s3.ap-east-1.amazonaws.com/humangenome/viruSITE_human_host.txt)
-
-Also you can generate the files yourself following instructions below:
-
-[VirusSITE](http://virusite.org/index.php?nav=search&fields=1&query1=Human&wc1=on&field1=virus.host&search=Search&query2=&wc2=on&field2=virus.name&query3=&wc3=on&field3=virus.name&search_nav=virus&sort=name&order=asc&rows=25&page=1)
-(viruSITE human host)
-Click "Format: CSV"
-
-[NCBI Prokaryotes](https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/)
-Filters -> Host (Homo sapiens) -> Assembly level (Complete) -> RefSeq category (representative) -> Download [prokaryotes.csv]
-
-After the mkref job is done, you need to edit line in "nextflow/nextflow.config" file -> "params.ref" to the actual S3 path where your output reference genome files are i.e. in "s3://${BUCKET_NAME_RESULTS}/batchA" or you could download from the downloadable links below and store them into your own S3 bucket folder:
-[human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf](https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf)
-[human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa](https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa)
-[human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf](https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf)
-[human_host_viruses.viruSITE.with_hg38.fa](https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa)
+Open the "nextflow.config" file in the vulture/nextflow directory. This following snippet shows how to specify the docker container for the pipeline. The docker container is hosted on Docker Hub and can be pulled by Nextflow automatically. 
 
 ```shell
 ...
-mkref {
-aws.region = 'us-east-2'
-process.container = 'public.ecr.aws/b6a4h2a6/scvh_mkref:latest'
-process.executor = 'awsbatch'
-process.queue = 'vulture-stdq'
-# this line needs to be changed
-params.ref = 's3://vulture-reference/humangenome/'
+dockerlocal {
+    docker.enabled = true
+    process.container = 'junyichen6/vulture:0.0.1'
+    docker.fixOwnership = true
+    docker.containerOptions = "--user root"
+
 }
 ...
 
 ```
+## Specify the configuration file for an analysis
 
-## Run Vulture pipeline - 2. Start main analysis
-
-Before we start our analysis, we need to edit "nextflow/params.yaml" file to include the reads of your interest. Here is a snippet of how the "params.yaml" file looks like
+Before we start our analysis, we need to creat a configuration file for the analysis. Here is a snippet of how the "params.yaml" file looks like:
 
 ```shell
 ...
 soloStrand: "Forward"
 alignment: "STAR"
-technology: "10XV2"
-virus_database: "viruSITE"
+technology: "10XV3"
+virus_database: "viruSITE.NCBIprokaryotes"
 soloMultiMappers: "EM"
 soloFeatures: "GeneFull"
-inputformat: "bam"
-soloInputSAMattrBarcodeSeq: "CB UB"
-barcodes_whitelist: "None"
-reads: 
-- "SRR6885502"
-- "SRR6885503"
-- "SRR6885504"
-- "SRR6885505"
-- "SRR6885506"
-- "SRR6885507"
-- "SRR6885508"
+inputformat: "fastq"
+sampleSubfix1: "_1"
+sampleSubfix2: "_2"
+ref: [The full path of your reference genome direcory, e.g. /home/user/data/references]
+samplepath: [The full path of your fastq samples, e.g /home/user/data/fastq]
+read2urls:
+- [The full path of your _2.fastq.gz file, e.g. /home/user/data/fastq/SRR12570125_2.fastq.gz]
+read1urls:
+- [The full path of your _1.fastq.gz file, e.g. /home/user/data/fastq/SRR12570125_1.fastq.gz]
+reads:
+- [An unique ID of your sample, e.g SRR12570125]
 ...
 ```
 
 Execute the command below to start the main analysis of Vulture.
 
 ```shell
-nextflow run scvh_full.nf -profile batchfull -params-file params.yaml -bucket-dir s3://${BUCKET_NAME_TEMP} --outdir=s3://${BUCKET_NAME_RESULTS}/batchD -with-report report_bam_$(date +%s).html -bg &>> submitnf_bam_$(date +%s).log
+cd vulture/nextflow
+nextflow run scvh_docker_local.nf -profile dockerlocal -params-file params.yaml --outdir=your_output_directory -with-report nextflow_report_$(date +%s).html -bg &>> nextflow_log_$(date +%s).log
+```
+
+A successful run will generate the following files in the output directory:
+
+```shell
+...
+nextflow_report_1628188800.html
+nextflow_log_1628188800.log
+...
+```
+The "nextflow_report_1628188800.html" file is a report of the analysis. The "nextflow_log_1628188800.log" file is the log file of the analysis. A successful run will also generate the following files in the nextflow_log_1628188800.log:
+
+```shell
+N E X T F L O W  ~  version 21.10.6
+Launching `scvh_docker_local.nf` [cheeky_brown] - revision: 59a6446081
+S C V H - N F   P I P E L I N E
+===================================
+transcriptome: /mnt/d/scvh_files/vmh_genome_dir/references
+reads        : [SRR12570125]
+outdir       : /mnt/d/output/
+database:    : viruSITE.NCBIprokaryotes
+threads      : 10 
+ram          : 128 
+alignment    : STAR 
+whitelist    : 3M-february-2018.txt 
+soloCBlen    : 16 
+soloCBstart  : 1 
+soloUMIstart : 17 
+soloUMIlen   : 12 
+soloStrand   : Forward 
+soloMultiMappers: EM 
+soloFeature : GeneFull 
+outSAMtype   : BAM SortedByCoordinate 
+technology   : 10XV3 
+pseudoBAM    : 
+inputformat    : fastq 
+sampleSubfix1    : _1 
+sampleSubfix2    : _2 
+
+[SRR12570125, /mnt/d/scvh_files/EXAMPLES/SRR12570125_1.fastq.gz, /mnt/d/scvh_files/EXAMPLES/SRR12570125_2.fastq.gz]
+[88/9dd405] Submitted process > Map (1)
+
 ```
 
 <div class="code-example" markdown="1">
