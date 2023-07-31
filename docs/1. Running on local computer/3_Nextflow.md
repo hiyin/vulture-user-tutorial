@@ -109,6 +109,11 @@ sampleSubfix2    : _2
 
 [SRR12570125, /mnt/d/scvh_files/EXAMPLES/SRR12570125_1.fastq.gz, /mnt/d/scvh_files/EXAMPLES/SRR12570125_2.fastq.gz]
 [88/9dd405] Submitted process > Map (1)
+...
+Completed at: 14-Jul-2023 16:56:53
+Duration    : 16m 8s
+CPU hours   : 57.6 (1.4% failed)
+Succeeded   : 3
 
 ```
 
@@ -225,6 +230,7 @@ CPU hours   : 57.6 (1.4% failed)
 Succeeded   : 8
 Ignored     : 8
 Failed      : 8
+```
 
 <div class="code-example" markdown="1">
 [Previous Step](https://juychen.github.io/docs/3_Nextflow/NextflowInstall.html){: .btn }
