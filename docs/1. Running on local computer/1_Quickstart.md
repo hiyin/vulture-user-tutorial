@@ -74,3 +74,17 @@ We install using the apt repository. Before you install Docker Engine for the fi
 
 
 sudo apt install build-essential
+
+
+sudo apt-get update --fix-missing && \
+    sudo apt-get install -y wget bzip2 ca-certificates \
+    libglib2.0-0 libxext6 libsm6 libxrender1 curl grep sed dpkg libcurl4-openssl-dev libssl-dev libhdf5-dev \
+    git mercurial subversion procps \
+    libxml-libxml-perl pigz awscli uuid-runtime time tini
+
+sudo apt-get install libblas-dev liblapack-dev
+
+sudo apt-get install gfortran
+
+# install DropletUtils
+
