@@ -6,7 +6,7 @@ nav_order: 3
 ---
 
 # Install the dependencies for the pipeline
-
+PLACE HOLDER
 ## <a name="require"></a>Requirements
 * Input data: 10x Chromium scRNA-seq reads
 * DropletUtils >= v1.10.2
