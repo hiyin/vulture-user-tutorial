@@ -164,7 +164,41 @@ You can install Docker Engine in different ways, depending on your needs:</p>
     libxml-libxml-perl pigz awscli uuid-runtime time tini</p>
 <p>sudo apt-get install libblas-dev liblapack-dev</p>
 <p>sudo apt-get install gfortran</p>
+<h1 id="install-nextflow">Install Nextflow</h1>
+<h2 id="install-java">Install Java</h2>
+<p>sudo apt install default-jdk</p>
+<p>wget -qO- https://get.nextflow.io | bash</p>
+<p>sudo apt-get install -y graphviz jq</p>
+<h1 id="run-from-current-directory">run from current directory</h1>
+<p>chmod +x nextflow</p>
+<h1 id="run-from-anywhere">run from anywhere</h1>
+<p>sudo mv nextflow /usr/local/bin/</p>
 <h1 id="install-dropletutils">install DropletUtils</h1>
+<h1 id="install-samtools-need-following-dependencies">Install samtools need following dependencies</h1>
+<h1 id="ncurses">ncurses</h1>
+<p>sudo apt-get install libncurses5-dev</p>
+<p>sudo apt-get install libbz2-dev</p>
+<p>sudo apt-get install liblzma-dev</p>
+<h1 id="dependenties-other-than-r-packages">dependenties other than R packages</h1>
+<p>wget https://github.com/alexdobin/STAR/archive/2.7.9a.tar.gz &amp;&amp; \
+tar -xzf 2.7.9a.tar.gz &amp;&amp; \
+echo "export PATH=/home/ubuntu/STAR-2.7.9a/bin/Linux_x86_64_static:\$PATH" &gt;&gt; ~/.bashrc &amp;&amp; \
+wget https://github.com/samtools/samtools/releases/download/1.13/samtools-1.13.tar.bz2 &amp;&amp; \
+tar -xf samtools-1.13.tar.bz2 &amp;&amp; \
+cd samtools-1.13 &amp;&amp; \
+./configure --prefix=/home/ubuntu/samtool
+make &amp;&amp;     make install &amp;&amp;     echo "export PATH=/home/ubuntu/samtools/bin:\$PATH" &gt;&gt; ~/.bashrc </p>
+<h1 id="add-bioconda-httpsbiocondagithubio">add bioconda https://bioconda.github.io/</h1>
+<p>conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict</p>
+<p>$ sudo apt-get install software-properties-common
+$ sudo add-apt-repository ppa:deadsnakes/ppa
+$ sudo apt-get update
+$ sudo apt-get install python3.8
+$ sudo apt-get install python3-pip
+$ pip install kb-python boto3 awscli</p>
               
             </div>
           </div><footer>
