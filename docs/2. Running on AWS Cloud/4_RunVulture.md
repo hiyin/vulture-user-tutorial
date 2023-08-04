@@ -2,7 +2,7 @@
 layout: default
 title: Running Vulture on AWS cloud with Nextflow
 has_children: false
-nav_order: 5
+nav_order: 1
 ---
 
 # Nextflow and scRNA-Seq processing
@@ -118,8 +118,3 @@ Execute the command below to start the main analysis of Vulture.
 ```shell
 nextflow run scvh_full.nf -profile batchfull -params-file params.yaml -bucket-dir s3://${BUCKET_NAME_TEMP} --outdir=s3://${BUCKET_NAME_RESULTS}/batchD -with-report report_bam_$(date +%s).html -bg &>> submitnf_bam_$(date +%s).log
 ```
-
-<div class="code-example" markdown="1">
-[Previous Step](https://juychen.github.io/docs/3_Nextflow/NextflowInstall.html){: .btn }
-[Next Step](https://juychen.github.io/docs/6_Local/Localusage.html){: .btn .btn-purple }
-</div>

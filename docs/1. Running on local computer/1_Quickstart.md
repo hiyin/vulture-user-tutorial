@@ -72,25 +72,24 @@ We install using the apt repository. Before you install Docker Engine for the fi
 # This command downloads a test image and runs it in a container. When the container runs, it prints a confirmation message and exits.
 ```
 
-
 sudo apt install build-essential
 
-
 sudo apt-get update --fix-missing && \
-    sudo apt-get install -y wget bzip2 ca-certificates \
+sudo apt-get install -y wget bzip2 ca-certificates \
     libglib2.0-0 libxext6 libsm6 libxrender1 curl grep sed dpkg libcurl4-openssl-dev libssl-dev libhdf5-dev \
     git mercurial subversion procps \
     libxml-libxml-perl pigz awscli uuid-runtime time tini
-
 sudo apt-get install libblas-dev liblapack-dev
-
 sudo apt-get install gfortran
+
+# need sudo to install packages otherwise error
+sudo Rscript -e 'install.packages("BiocManager")'
+sudo Rscript -e 'BiocManager::install("DropletUtils")'
+
 # Install Nextflow
 ## Install Java
 sudo apt install default-jdk
-
 wget -qO- https://get.nextflow.io | bash
-
 sudo apt-get install -y graphviz jq
 
 # run from current directory
@@ -100,13 +99,9 @@ sudo mv nextflow /usr/local/bin/
 
 # install DropletUtils
 
-
-# Install samtools need following dependencies
-# ncurses
+# Install samtools need following dependencies ncurses
 sudo apt-get install libncurses5-dev
-
 sudo apt-get install libbz2-dev
-
 sudo apt-get install liblzma-dev
 
 # dependenties other than R packages
@@ -116,21 +111,44 @@ echo "export PATH=/home/ubuntu/STAR-2.7.9a/bin/Linux_x86_64_static:\$PATH" >> ~/
 wget https://github.com/samtools/samtools/releases/download/1.13/samtools-1.13.tar.bz2 && \
 tar -xf samtools-1.13.tar.bz2 && \
 cd samtools-1.13 && \
-./configure --prefix=/home/ubuntu/samtool
-make &&     make install &&     echo "export PATH=/home/ubuntu/samtools/bin:\$PATH" >> ~/.bashrc 
+./configure --prefix=/home/ubuntu/samtools
+make && make install && echo "export PATH=/home/ubuntu/samtools/bin:\$PATH" >> ~/.bashrc
+. ~/.bashrc 
+cd $HOME
+
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install python3.8
+sudo apt-get install python3-pip
+pip install kb-python boto3 awscli
+
+# download all files include whitelist in vmh_
+
+mkdir vmh_genome_dir
+cd vmh_genome_dir
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/3M-february-2018.txt
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/737K-august-2016.txt
+
+cd $HOME
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/example/SRR12570425_1.fastq.gz
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/example/SRR12570425_2.fastq.gz
+
+cd $HOME
+
+git clone https://github.com/holab-hku/Vulture.git
+# running command
+perl $HOME/Vulture/scvh_map_reads.pl -t 12 -o $HOME/Vulture_output/SRR12570425 $HOME/vmh_genome_dir $HOME/SRR12570425_2.fastq.gz $HOME/SRR12570425_1.fastq.gz --soloStrand "Forward" --whitelist "$HOME/vmh_genome_dir/3M-february-2018.txt" --soloCBlen 16 --soloUMIstart 1 --soloUMIstart 17 --soloUMIlen 12 -soloUMIlen 12
+
+Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425
+
+Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425
 
 
-# add bioconda https://bioconda.github.io/
-conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
-conda config --set channel_priority strict
 
 
 
-$ sudo apt-get install software-properties-common
-$ sudo add-apt-repository ppa:deadsnakes/ppa
-$ sudo apt-get update
-$ sudo apt-get install python3.8
-$ sudo apt-get install python3-pip
-$ pip install kb-python boto3 awscli

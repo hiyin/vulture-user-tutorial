@@ -47,8 +47,3 @@ Even though we are depending on an IAM Role and not local permissions some tools
 export AWS_REGION=us-east-2
 echo "AWS_REGION=${AWS_REGION}" |tee -a ~/.bashrc
 ```
-
-<div class="code-example" markdown="1">
-[Previous Step](https://juychen.github.io/docs/2_Setup/Setup.html){: .btn }
-[Next Step](https://juychen.github.io/docs/3_Nextflow/NextflowInstall.html){: .btn .btn-purple }
-</div>

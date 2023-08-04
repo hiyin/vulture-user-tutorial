@@ -77,9 +77,3 @@ where *sample_name* is an optional user-specified tag to be used as a prefix for
 ```sh
 Usage: perl scvh_analyze_bam.pl output_dir sample_name
 ```
-
-
-<div class="code-example" markdown="1">
-[Previous Step](https://juychen.github.io/docs/6_Local/Quickstart.html){: .btn }
-[Next Step](https://juychen.github.io/docs/6_Local/Nextflow.html){: .btn .btn-purple }
-</div>

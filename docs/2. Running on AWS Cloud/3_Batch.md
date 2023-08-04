@@ -130,10 +130,3 @@ We can return back to the home page of Batch at: [https://us-east-2.console.aws.
 ### 1. Setup Batch Vulture Job Queue 2
 
 We can return back to the home page of [Batch](https://us-east-2.console.aws.amazon.com/batch/home). Create a Job Queue 2 for parallel processing of Vulture tasks by repeating the same steps from Step 1 to Step 4 used to create Job Queue 1 above.
-
-
-
-<div class="code-example" markdown="1">
-[Previous Step](https://juychen.github.io/docs/5_Cloud/Nextflow.html){: .btn }
-[Next Step](https://juychen.github.io/docs/6_Local/Localrun.html){: .btn .btn-purple }
-</div>
