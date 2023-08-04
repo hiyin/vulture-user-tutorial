@@ -213,9 +213,23 @@ wget https://vulture-reference.s3.ap-east-1.amazonaws.com/example/SRR12570425_2.
 <p>cd $HOME</p>
 <p>git clone https://github.com/holab-hku/Vulture.git</p>
 <h1 id="running-command">running command</h1>
+<h1 id="mkdir-output-directory-otherwise-error">mkdir output directory otherwise error</h1>
+<p>mkdir $HOME/Vulture_output
+mkdir $HOME/Vulture_output/SRR12570425</p>
 <p>perl $HOME/Vulture/scvh_map_reads.pl -t 12 -o $HOME/Vulture_output/SRR12570425 $HOME/vmh_genome_dir $HOME/SRR12570425_2.fastq.gz $HOME/SRR12570425_1.fastq.gz --soloStrand "Forward" --whitelist "$HOME/vmh_genome_dir/3M-february-2018.txt" --soloCBlen 16 --soloUMIstart 1 --soloUMIstart 17 --soloUMIlen 12 -soloUMIlen 12</p>
+<h1 id="_1"></h1>
 <p>Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425</p>
-<p>Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425</p>
+<h1 id="_2"></h1>
+<p>perl $HOME/Vulture/scvh_analyze_bam.pl $HOME/Vulture_output/SRR12570425</p>
+<h1 id="download-nextflow">Download nextflow</h1>
+<p>nextflow download 22.10 package the tar.gz pack from github, untar , run ./nextflow in the package, then do export echo to path</p>
+<p>wget https://github.com/nextflow-io/nextflow/archive/refs/tags/v22.10.0.tar.gz
+tar xvf v22.10.0.tar.gz
+cd nextflow-22.10.0/
+./nextflow
+echo "export PATH=/home/ubuntu/nextflow-22.10.0:\$PATH" &gt;&gt; ~/.bashrc</p>
+<p>nextflow run scvh_docker_local.nf -profile batchlocal -params-file params.yaml --outdir=/home/ubuntu/Vulture_output/nextflow -with-report nextflow_report_$(date +%s).html -bg &amp;&gt;&gt; nextflow_log_$(d
+ate +%s).log</p>
               
             </div>
           </div><footer>
