@@ -158,27 +158,29 @@ You can install Docker Engine in different ways, depending on your needs:</p>
 </code></pre>
 <p>sudo apt install build-essential</p>
 <p>sudo apt-get update --fix-missing &amp;&amp; \
-    sudo apt-get install -y wget bzip2 ca-certificates \
+sudo apt-get install -y wget bzip2 ca-certificates \
     libglib2.0-0 libxext6 libsm6 libxrender1 curl grep sed dpkg libcurl4-openssl-dev libssl-dev libhdf5-dev \
     git mercurial subversion procps \
-    libxml-libxml-perl pigz awscli uuid-runtime time tini</p>
-<p>sudo apt-get install libblas-dev liblapack-dev</p>
-<p>sudo apt-get install gfortran</p>
+    libxml-libxml-perl pigz awscli uuid-runtime time tini
+sudo apt-get install libblas-dev liblapack-dev
+sudo apt-get install gfortran</p>
+<h1 id="need-sudo-to-install-packages-otherwise-error">need sudo to install packages otherwise error</h1>
+<p>sudo Rscript -e 'install.packages("BiocManager")'
+sudo Rscript -e 'BiocManager::install("DropletUtils")'</p>
 <h1 id="install-nextflow">Install Nextflow</h1>
 <h2 id="install-java">Install Java</h2>
-<p>sudo apt install default-jdk</p>
-<p>wget -qO- https://get.nextflow.io | bash</p>
-<p>sudo apt-get install -y graphviz jq</p>
+<p>sudo apt install default-jdk
+wget -qO- https://get.nextflow.io | bash
+sudo apt-get install -y graphviz jq</p>
 <h1 id="run-from-current-directory">run from current directory</h1>
 <p>chmod +x nextflow</p>
 <h1 id="run-from-anywhere">run from anywhere</h1>
 <p>sudo mv nextflow /usr/local/bin/</p>
 <h1 id="install-dropletutils">install DropletUtils</h1>
-<h1 id="install-samtools-need-following-dependencies">Install samtools need following dependencies</h1>
-<h1 id="ncurses">ncurses</h1>
-<p>sudo apt-get install libncurses5-dev</p>
-<p>sudo apt-get install libbz2-dev</p>
-<p>sudo apt-get install liblzma-dev</p>
+<h1 id="install-samtools-need-following-dependencies-ncurses">Install samtools need following dependencies ncurses</h1>
+<p>sudo apt-get install libncurses5-dev
+sudo apt-get install libbz2-dev
+sudo apt-get install liblzma-dev</p>
 <h1 id="dependenties-other-than-r-packages">dependenties other than R packages</h1>
 <p>wget https://github.com/alexdobin/STAR/archive/2.7.9a.tar.gz &amp;&amp; \
 tar -xzf 2.7.9a.tar.gz &amp;&amp; \
@@ -186,19 +188,34 @@ echo "export PATH=/home/ubuntu/STAR-2.7.9a/bin/Linux_x86_64_static:\$PATH" &gt;&
 wget https://github.com/samtools/samtools/releases/download/1.13/samtools-1.13.tar.bz2 &amp;&amp; \
 tar -xf samtools-1.13.tar.bz2 &amp;&amp; \
 cd samtools-1.13 &amp;&amp; \
-./configure --prefix=/home/ubuntu/samtool
-make &amp;&amp;     make install &amp;&amp;     echo "export PATH=/home/ubuntu/samtools/bin:\$PATH" &gt;&gt; ~/.bashrc </p>
-<h1 id="add-bioconda-httpsbiocondagithubio">add bioconda https://bioconda.github.io/</h1>
-<p>conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
-conda config --set channel_priority strict</p>
-<p>$ sudo apt-get install software-properties-common
-$ sudo add-apt-repository ppa:deadsnakes/ppa
-$ sudo apt-get update
-$ sudo apt-get install python3.8
-$ sudo apt-get install python3-pip
-$ pip install kb-python boto3 awscli</p>
+./configure --prefix=/home/ubuntu/samtools
+make &amp;&amp; make install &amp;&amp; echo "export PATH=/home/ubuntu/samtools/bin:\$PATH" &gt;&gt; ~/.bashrc
+. ~/.bashrc 
+cd $HOME</p>
+<p>sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install python3.8
+sudo apt-get install python3-pip
+pip install kb-python boto3 awscli</p>
+<h1 id="download-all-files-include-whitelist-in-vmh_">download all files include whitelist in vmh_</h1>
+<p>mkdir vmh_genome_dir
+cd vmh_genome_dir
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/3M-february-2018.txt
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/737K-august-2016.txt</p>
+<p>cd $HOME
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/example/SRR12570425_1.fastq.gz
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/example/SRR12570425_2.fastq.gz</p>
+<p>cd $HOME</p>
+<p>git clone https://github.com/holab-hku/Vulture.git</p>
+<h1 id="running-command">running command</h1>
+<p>perl $HOME/Vulture/scvh_map_reads.pl -t 12 -o $HOME/Vulture_output/SRR12570425 $HOME/vmh_genome_dir $HOME/SRR12570425_2.fastq.gz $HOME/SRR12570425_1.fastq.gz --soloStrand "Forward" --whitelist "$HOME/vmh_genome_dir/3M-february-2018.txt" --soloCBlen 16 --soloUMIstart 1 --soloUMIstart 17 --soloUMIlen 12 -soloUMIlen 12</p>
+<p>Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425</p>
+<p>Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425</p>
               
             </div>
           </div><footer>
