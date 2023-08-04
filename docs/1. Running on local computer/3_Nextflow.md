@@ -67,7 +67,7 @@ Execute the command below to start the main analysis of Vulture.
 
 ```shell
 cd vulture/nextflow
-nextflow run scvh_full_local.nf -profile batchlocal -params-file params.yaml --outdir=your_output_directory -with-report nextflow_report_$(date +%s).html -bg &>> nextflow_log_$(date +%s).log
+nextflow run scvh_docker_local.nf -profile batchlocal -params-file params.yaml --outdir=your_output_directory -with-report nextflow_report_$(date +%s).html -bg &>> nextflow_log_$(date +%s).log
 ```
 
 A successful run will generate the following files in the output directory:
