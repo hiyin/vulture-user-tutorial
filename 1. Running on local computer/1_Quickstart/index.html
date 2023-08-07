@@ -169,13 +169,12 @@ sudo apt-get install gfortran</p>
 sudo Rscript -e 'BiocManager::install("DropletUtils")'</p>
 <h1 id="install-nextflow">Install Nextflow</h1>
 <h2 id="install-java">Install Java</h2>
-<p>sudo apt install default-jdk
-wget -qO- https://get.nextflow.io | bash
-sudo apt-get install -y graphviz jq</p>
-<h1 id="run-from-current-directory">run from current directory</h1>
-<p>chmod +x nextflow</p>
-<h1 id="run-from-anywhere">run from anywhere</h1>
-<p>sudo mv nextflow /usr/local/bin/</p>
+<p>sudo apt install default-jdk</p>
+<p>wget https://github.com/nextflow-io/nextflow/archive/refs/tags/v22.10.0.tar.gz
+tar xvf v22.10.0.tar.gz
+cd nextflow-22.10.0/
+echo "export PATH=/home/ubuntu/nextflow-22.10.0:\$PATH" &gt;&gt; ~/.bashrc</p>
+<p>sudo apt-get install -y graphviz jq</p>
 <h1 id="install-dropletutils">install DropletUtils</h1>
 <h1 id="install-samtools-need-following-dependencies-ncurses">Install samtools need following dependencies ncurses</h1>
 <p>sudo apt-get install libncurses5-dev
@@ -223,13 +222,17 @@ mkdir $HOME/Vulture_output/SRR12570425</p>
 <p>perl $HOME/Vulture/scvh_analyze_bam.pl $HOME/Vulture_output/SRR12570425</p>
 <h1 id="download-nextflow">Download nextflow</h1>
 <p>nextflow download 22.10 package the tar.gz pack from github, untar , run ./nextflow in the package, then do export echo to path</p>
+<h1 id="install-github-2210-to-avoid-error">install github  22.10 to avoid error</h1>
 <p>wget https://github.com/nextflow-io/nextflow/archive/refs/tags/v22.10.0.tar.gz
 tar xvf v22.10.0.tar.gz
 cd nextflow-22.10.0/
-./nextflow
 echo "export PATH=/home/ubuntu/nextflow-22.10.0:\$PATH" &gt;&gt; ~/.bashrc</p>
-<p>nextflow run scvh_docker_local.nf -profile batchlocal -params-file params.yaml --outdir=/home/ubuntu/Vulture_output/nextflow -with-report nextflow_report_$(date +%s).html -bg &amp;&gt;&gt; nextflow_log_$(d
+<h1 id="run-on-local-computer-using-nextflow">run on local computer using nextflow</h1>
+<p>git checkout revision
+nextflow run scvh_docker_local.nf -profile batchlocal -params-file params.yaml --outdir=/home/ubuntu/Vulture_output/nextflow -with-report nextflow_report_$(date +%s).html -bg &amp;&gt;&gt; nextflow_log_$(d
 ate +%s).log</p>
+<h2 id="screenshot-of-the-settings-of-nextflowconfig">screenshot of the settings of nextflow.config</h2>
+<h2 id="screenshot-of-the-settings-of-paramsyaml">screenshot of the settings of params.yaml</h2>
               
             </div>
           </div><footer>
