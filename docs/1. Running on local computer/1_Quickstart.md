@@ -89,13 +89,15 @@ sudo Rscript -e 'BiocManager::install("DropletUtils")'
 # Install Nextflow
 ## Install Java
 sudo apt install default-jdk
-wget -qO- https://get.nextflow.io | bash
+
+wget https://github.com/nextflow-io/nextflow/archive/refs/tags/v22.10.0.tar.gz
+tar xvf v22.10.0.tar.gz
+cd nextflow-22.10.0/
+echo "export PATH=/home/ubuntu/nextflow-22.10.0:\$PATH" >> ~/.bashrc
+
 sudo apt-get install -y graphviz jq
 
-# run from current directory
-chmod +x nextflow
-# run from anywhere
-sudo mv nextflow /usr/local/bin/
+
 
 # install DropletUtils
 
@@ -142,11 +144,38 @@ cd $HOME
 
 git clone https://github.com/holab-hku/Vulture.git
 # running command
+# mkdir output directory otherwise error
+mkdir $HOME/Vulture_output
+mkdir $HOME/Vulture_output/SRR12570425
+
 perl $HOME/Vulture/scvh_map_reads.pl -t 12 -o $HOME/Vulture_output/SRR12570425 $HOME/vmh_genome_dir $HOME/SRR12570425_2.fastq.gz $HOME/SRR12570425_1.fastq.gz --soloStrand "Forward" --whitelist "$HOME/vmh_genome_dir/3M-february-2018.txt" --soloCBlen 16 --soloUMIstart 1 --soloUMIstart 17 --soloUMIlen 12 -soloUMIlen 12
 
+# 
 Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425
 
-Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425
+# 
+perl $HOME/Vulture/scvh_analyze_bam.pl $HOME/Vulture_output/SRR12570425
+
+
+
+# Download nextflow
+
+nextflow download 22.10 package the tar.gz pack from github, untar , run ./nextflow in the package, then do export echo to path
+
+# install github  22.10 to avoid error
+wget https://github.com/nextflow-io/nextflow/archive/refs/tags/v22.10.0.tar.gz
+tar xvf v22.10.0.tar.gz
+cd nextflow-22.10.0/
+echo "export PATH=/home/ubuntu/nextflow-22.10.0:\$PATH" >> ~/.bashrc
+
+# run on local computer using nextflow
+git checkout revision
+nextflow run scvh_docker_local.nf -profile batchlocal -params-file params.yaml --outdir=/home/ubuntu/Vulture_output/nextflow -with-report nextflow_report_$(date +%s).html -bg &>> nextflow_log_$(d
+ate +%s).log
+
+## screenshot of the settings of nextflow.config
+
+## screenshot of the settings of params.yaml
 
 
 
