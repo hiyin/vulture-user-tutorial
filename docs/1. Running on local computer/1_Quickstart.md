@@ -28,7 +28,7 @@ Codename:       jammy
 * salmon/alevin >= v1.4.0
 
 ## For a quick start, you can install all above listed dependencies via pre-prepared bash scripts
-Download [vulture-quickstart.sh]https://vulture-reference.s3.ap-east-1.amazonaws.com/install-vulture-dependencies-local.sh to install every dependencies in one click.
+Download [vulture-quickstart.sh](https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh) to install every dependencies in one click.
 
 ```sh
 # run quickstart script
@@ -189,8 +189,8 @@ You need to download virus genome, prokaryotes genome, combined genome and virus
 [human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa](https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa)
 [human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf](https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf)
 [human_host_viruses.viruSITE.with_hg38.fa](https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa)
-[3M-feburary-2018.txt]https://vulture-reference.s3.ap-east-1.amazonaws.com/3M-february-2018.txt
-[737k-august-2016.txt]https://vulture-reference.s3.ap-east-1.amazonaws.com/737K-august-2016.txt
+[3M-feburary-2018.txt](https://vulture-reference.s3.ap-east-1.amazonaws.com/3M-february-2018.txt)
+[737k-august-2016.txt](https://vulture-reference.s3.ap-east-1.amazonaws.com/737K-august-2016.txt)
 
 ### 1. Map 10x scRNA-seq reads to the viral microbial host reference set:
 
