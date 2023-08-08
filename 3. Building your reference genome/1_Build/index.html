@@ -113,7 +113,7 @@
 <ul>
 <li>Docker</li>
 </ul>
-<p>Please refer to Section 1.4 or <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> for installation.</p>
+<p>Please refer to Section <a href="https://hiyin.github.io/vulture-user-tutorial/1.%20Running%20on%20local%20computer/4_Docker/">1.Docker</a> or <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> for installation.</p>
 <p>Now we are about to run the first step of the Vulture pipeline i.e. mkref (genome reference making), execute the command below in your favourite terminal or powershell and wait it to be finished.</p>
 <h2 id="download-the-input-data-for-mkref-stage">Download the input data for mkref stage</h2>
 <p>The input data required for mkref stage are available in the downloadable links below, you can save them into your own S3 bucket folder:</p>
@@ -137,21 +137,42 @@
 Click "Format: CSV"</p>
 <p><a href="https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/">NCBI Prokaryotes</a>
 Filters -&gt; Host (Homo sapiens) -&gt; Assembly level (Complete) -&gt; RefSeq category (representative) -&gt; Download [prokaryotes.csv]</p>
-<p>After the mkref job is done, you need to edit line in "nextflow/nextflow.config" file -&gt; "params.ref" to the actual S3 path where your output reference genome files are i.e. in "s3://${BUCKET_NAME_RESULTS}/batchA" or you could download from the downloadable links below and store them into your own S3 bucket folder:
-<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf">human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf</a>
-<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa">human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa</a>
-<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf">human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf</a>
-<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa">human_host_viruses.viruSITE.with_hg38.fa</a></p>
+<p>Notice that you can edit the of virus or Prokaryotes in viruSITE_human_host.txt and prokaryotes.csv by any text editor to further customize the genome. Then, the folder of your reference input should have the following files:</p>
+<pre><code class="language-shell">#The input path e.g. /home/user/data/refinput should have:
+hg38.fa  hg38.unique_gene_names.gtf  prokaryotes.csv  viruSITE_human_host.txt
+</code></pre>
+<p>We then edit the mkref profile in the Vulture/nextflow/nextflow.config:</p>
 <pre><code class="language-shell">...
-mkref {
-process.container = 'public.ecr.aws/b6a4h2a6/scvh_mkref:latest'
-params.ref = '$HOME/humangenome/'
-}
+    mkref {
+        process.container = 'public.ecr.aws/b6a4h2a6/scvh_mkref:latest'
+        docker.enabled = true
+        params.ref = '[The full path of you pull your reference genome input, e.g. /home/user/data/refinput]'
+        params.humanfa = 'hg38.fa'
+        params.humagtf = 'hg38.unique_gene_names.gtf'
+        params.viruSITE = 'viruSITE_human_host.txt'
+        params.prokaryotes = 'prokaryotes.csv'
+        params.outdir = '[The full path of you pull your reference genome output, e.g. /home/user/data/genome]'
+    }  
 ...
 
 </code></pre>
-<pre><code class="language-shell">nextflow run scvh_mkref.nf -profile mkref --outdir=s3://${BUCKET_NAME_RESULTS}/batchA -with-report mkref_$(date +%s).html -bg &amp;&gt;&gt; mkref_$(date +%s).log;
+<p>Afterwards, run the following command to make your own reference genome:</p>
+<pre><code class="language-shell">nextflow run scvh_mkref.nf -profile mkref -with-report mkref_$(date +%s).html -bg &amp;&gt;&gt; mkref_$(date +%s).log;
 </code></pre>
+<p>The output files should be in the folder you specified in the nextflow.config file, e.g. /home/user/data/genome. There will be a subfolder named "newref" in the output folder, which contains the following files:</p>
+<pre><code class="language-shell">3M-february-2018.txt
+737K-august-2016.txt
+human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa
+human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf
+human_host_viruses_reference_set
+</code></pre>
+<p>These files can be the input of the next step of the Vulture pipeline. They are also available in the downloadable links below:</p>
+<ul>
+<li>Hg38 human genome with virus and microbes: <a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa">human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa</a></li>
+<li>Hg38 human genome with virus: <a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa">human_host_viruses.viruSITE.with_hg38.fa</a></li>
+<li>Hg38 human genome annotaion with virus and microbes: <a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf">human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf</a></li>
+<li>Hg38 human genome annotaion with virus: <a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf">human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf</a></li>
+</ul>
               
             </div>
           </div><footer>
