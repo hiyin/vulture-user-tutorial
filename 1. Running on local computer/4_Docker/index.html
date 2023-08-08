@@ -54,11 +54,7 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="./">Docker</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#install-docker">Install docker</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#specify-docker-container-in-nextflow-config-file">Specify docker container in Nextflow config file</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#specify-the-configuration-file-for-an-analysis">Specify the configuration file for an analysis</a>
+    <li class="toctree-l2"><a class="reference internal" href="#install-docker">Install Docker</a>
     </li>
     </ul>
                   </li>
@@ -76,7 +72,7 @@
               </ul>
               <p class="caption"><span class="caption-text">3. Building your reference genome</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../3.%20Building%20your%20reference%20genome/1_Build/">1 Build</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../3.%20Building%20your%20reference%20genome/1_Build/">Build our own reference genome</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Supplementary</span></p>
@@ -117,8 +113,40 @@ Description:    Ubuntu 22.04.2 LTS
 Release:        22.04
 Codename:       jammy
 </code></pre>
-<h2 id="install-docker">Install docker</h2>
-<p>Place holder for docker installation</p>
+<h2 id="install-docker">Install Docker</h2>
+<p>Installation methods can be found exactly at https://docs.docker.com/engine/install/ubuntu/.
+You can install Docker Engine in different ways, depending on your needs:</p>
+<p>We install using the apt repository. Before you install Docker Engine for the first time on a new host machine, you need to set up the Docker repository. Afterward, you can install and update Docker from the repository.</p>
+<pre><code class="language-sh"># Set up the repository
+# Update the apt package index and install packages to allow apt to use a repository over HTTPS:
+ sudo apt-get update
+ sudo apt-get install ca-certificates curl gnupg
+
+# Add Docker’s official GPG key:
+ sudo install -m 0755 -d /etc/apt/keyrings
+ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+ sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Use the following command to set up the repository:
+ echo \
+  &quot;deb [arch=&quot;$(dpkg --print-architecture)&quot; signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  &quot;$(. /etc/os-release &amp;&amp; echo &quot;$VERSION_CODENAME&quot;)&quot; stable&quot; | \
+  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+
+</code></pre>
+<h1 id="install-docker-engine">Install Docker Engine</h1>
+<p>We install the latest version of Docker Engine and containerd. The we test that your installation is working correctly.</p>
+<pre><code class="language-sh"># Update the apt package index:
+ sudo apt-get update
+
+# Install Docker Engine, containerd, and Docker Compose.
+# To install the latest version, run:
+ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+#Verify that the Docker Engine installation is successful by running the hello-world image.
+ sudo docker run hello-world
+# This command downloads a test image and runs it in a container. When the container runs, it prints a confirmation message and exits.
+</code></pre>
 <h2 id="specify-docker-container-in-nextflow-config-file">Specify docker container in Nextflow config file</h2>
 <p>Open the "nextflow.config" file in the vulture/nextflow directory. This following snippet shows how to specify the docker container for the pipeline. The docker container is hosted on Docker Hub and can be pulled by Nextflow automatically. </p>
 <pre><code class="language-shell">...
@@ -144,18 +172,18 @@ soloFeatures: &quot;GeneFull&quot;
 inputformat: &quot;fastq&quot;
 sampleSubfix1: &quot;_1&quot;
 sampleSubfix2: &quot;_2&quot;
-ref: [The full path of your reference genome direcory, e.g. /home/user/data/references]
-samplepath: [The full path of your fastq samples, e.g /home/user/data/fastq]
+ref: [The full path of your reference genome direcory, e.g. $HOME/data/references]
+samplepath: [The full path of your fastq samples, e.g $HOME/data/fastq]
 read2urls:
-- [The full path of your _2.fastq.gz file, e.g. /home/user/data/fastq/SRR12570125_2.fastq.gz]
+- [The full path of your _2.fastq.gz file, e.g. $HOME/data/fastq/SRR12570125_2.fastq.gz]
 read1urls:
-- [The full path of your _1.fastq.gz file, e.g. /home/user/data/fastq/SRR12570125_1.fastq.gz]
+- [The full path of your _1.fastq.gz file, e.g.$HOME/fastq/SRR12570125_1.fastq.gz]
 reads:
 - [An unique ID of your sample, e.g SRR12570125]
 ...
 </code></pre>
 <p>Execute the command below to start the main analysis of Vulture.</p>
-<pre><code class="language-shell">cd vulture/nextflow
+<pre><code class="language-shell">cd $HOME/Vulture/nextflow
 nextflow run scvh_docker_local.nf -profile dockerlocal -params-file params.yaml --outdir=your_output_directory -with-report nextflow_report_$(date +%s).html -bg &amp;&gt;&gt; nextflow_log_$(date +%s).log
 </code></pre>
 <p>A successful run will generate the following files in the output directory:</p>
@@ -195,10 +223,6 @@ sampleSubfix2    : _2
 [88/9dd405] Submitted process &gt; Map (1)
 
 </code></pre>
-<div class="code-example" markdown="1">
-[Previous Step](https://juychen.github.io/docs/3_Nextflow/NextflowInstall.html){: .btn }
-[Next Step](https://juychen.github.io/docs/6_Local/Localusage.html){: .btn .btn-purple }
-</div>
               
             </div>
           </div><footer>

@@ -54,6 +54,8 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#install-java-and-nextflow">Install Java and Nextflow</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#specify-the-local-envrionment-in-the-nextflow-config-file">Specify the local envrionment in the Nextflow config file</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#specify-the-configuration-file-for-an-analysis-reading-files-from-the-local-computer">Specify the configuration file for an analysis reading files from the local computer</a>
@@ -78,7 +80,7 @@
               </ul>
               <p class="caption"><span class="caption-text">3. Building your reference genome</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../3.%20Building%20your%20reference%20genome/1_Build/">1 Build</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../3.%20Building%20your%20reference%20genome/1_Build/">Build our own reference genome</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Supplementary</span></p>
@@ -112,23 +114,37 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="install-the-dependencies-for-the-pipeline">Install the dependencies for the pipeline</h1>
-<p>PLACE HOLDER 2</p>
-<h2 id="requirements"><a name="require"></a>Requirements</h2>
-<ul>
-<li>Input data: 10x Chromium scRNA-seq reads</li>
-<li>DropletUtils &gt;= v1.10.2</li>
-<li>STAR &gt;= v2.7.9a or</li>
-<li>cellranger &gt;= 6.0.0 or</li>
-<li>Kallisto/bustools &gt;= 0.25.1 or</li>
-<li>salmon/alevin &gt;= v1.4.0</li>
-<li>Nextflow &gt;= v21.04.3</li>
-</ul>
+                <h1 id="run-vulture-on-local-machines-using-nextflow">Run Vulture on local machines using Nextflow</h1>
 <p>The instructions are tested on the following system:</p>
 <pre><code class="language-shell">Distributor ID: Ubuntu
 Description:    Ubuntu 22.04.2 LTS
 Release:        22.04
 Codename:       jammy
+</code></pre>
+<h2 id="requirements"><a name="require"></a>Requirements</h2>
+<ul>
+<li>Input data: 10x Chromium scRNA-seq reads</li>
+<li>Nextflow &lt;= v22.10.0</li>
+<li>R &gt;= v4.0.0</li>
+<li>DropletUtils &gt;= v1.10.2</li>
+<li>Samtools &gt;= v1.13</li>
+<li>STAR &gt;= v2.7.9a or</li>
+<li>cellranger &gt;= 6.0.0 or</li>
+<li>Kallisto/bustools &gt;= 0.25.1 or</li>
+<li>salmon/alevin &gt;= v1.4.0</li>
+</ul>
+<h2 id="install-java-and-nextflow">Install Java and Nextflow</h2>
+<p>Nextflow is a workflow manager that enables the development of portable and reproducible workflows. It supports deploying workflows on a variety of execution platforms including local, HPC schedulers, AWS Batch, Google Cloud Life Sciences, Kubernetes, Slurm, Singularity, PBS, LSF, among others. It also supports most popular cluster schedulers including SGE, SLURM, PBS, LSF, IBM Spectrum LSF, Sun Grid Engine, HTCondor, among others.
+We apply Nextflow v22.10.tar.gz in this tutorial because it is the latest version that is compatible with the Vulture pipeline.</p>
+<pre><code class="language-sh">## Install Java
+sudo apt install default-jdk
+
+## Install nextflow 22.10.0
+wget https://github.com/nextflow-io/nextflow/archive/refs/tags/v22.10.0.tar.gz
+tar xvf v22.10.0.tar.gz
+cd nextflow-22.10.0/
+echo &quot;export PATH=/home/ubuntu/nextflow-22.10.0:\$PATH&quot; &gt;&gt; ~/.bashrc
+sudo apt-get install -y graphviz jq
 </code></pre>
 <h2 id="specify-the-local-envrionment-in-the-nextflow-config-file">Specify the local envrionment in the Nextflow config file</h2>
 <p>Open the "nextflow.config" file in the vulture/nextflow directory. This following snippet shows how to disable the docker container for the pipeline.</p>

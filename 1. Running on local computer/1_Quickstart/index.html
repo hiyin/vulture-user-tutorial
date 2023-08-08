@@ -70,7 +70,7 @@
               </ul>
               <p class="caption"><span class="caption-text">3. Building your reference genome</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../3.%20Building%20your%20reference%20genome/1_Build/">1 Build</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../3.%20Building%20your%20reference%20genome/1_Build/">Build our own reference genome</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Supplementary</span></p>
@@ -105,12 +105,42 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="quick-start"><a name="Quick start"></a>Quick start</h2>
-<p>PLACEHOLDER</p>
-<p>For Linux Machine </p>
-<h2 id="install-r">Install R</h2>
-<h1 id="pick-your-cranmirror-to-start-installation">Pick your CRAN/mirror to start installation</h1>
+<p>The instructions are tested on the following system:</p>
+<pre><code class="language-shell">Distributor ID: Ubuntu
+Description:    Ubuntu 22.04.2 LTS
+Release:        22.04
+Codename:       jammy
+</code></pre>
+<h1 id="install-denpendency-for-vulture">Install denpendency for Vulture</h1>
+<h2 id="requirements"><a name="require"></a>Requirements</h2>
+<ul>
+<li>Input data: 10x Chromium scRNA-seq reads</li>
+<li>R &gt;= v4.0.0</li>
+<li>DropletUtils &gt;= v1.10.2</li>
+<li>Samtools &gt;= v1.13</li>
+<li>STAR &gt;= v2.7.9a or</li>
+<li>cellranger &gt;= 6.0.0 or</li>
+<li>Kallisto/bustools &gt;= 0.25.1 or</li>
+<li>salmon/alevin &gt;= v1.4.0</li>
+</ul>
+<h2 id="install-java-and-nextflow">Install Java and Nextflow</h2>
+<p>Nextflow is a workflow manager that enables the development of portable and reproducible workflows. It supports deploying workflows on a variety of execution platforms including local, HPC schedulers, AWS Batch, Google Cloud Life Sciences, Kubernetes, Slurm, Singularity, PBS, LSF, among others. It also supports most popular cluster schedulers including SGE, SLURM, PBS, LSF, IBM Spectrum LSF, Sun Grid Engine, HTCondor, among others.
+We apply Nextflow v22.10.tar.gz in this tutorial because it is the latest version that is compatible with the Vulture pipeline.</p>
+<pre><code class="language-sh">## Install Java
+sudo apt install default-jdk
+
+## Install nextflow 22.10.0
+wget https://github.com/nextflow-io/nextflow/archive/refs/tags/v22.10.0.tar.gz
+tar xvf v22.10.0.tar.gz
+cd nextflow-22.10.0/
+echo &quot;export PATH=/home/ubuntu/nextflow-22.10.0:\$PATH&quot; &gt;&gt; ~/.bashrc
+sudo apt-get install -y graphviz jq
+</code></pre>
+<h2 id="install-dropletutils">Install DropletUtils</h2>
+<p>In this tutorial, the major dependency of the R package is the DropletUtils. We first install R and then install DropletUtils from the CRAN repository.</p>
+<h3 id="pick-your-cranmirror-to-start-installation">Pick your CRAN/mirror to start installation</h3>
 <p>https://cran.r-project.org/mirrors.html</p>
-<p>Here we choose Hong Kong mirror at https://mirror-hk.koddos.net/CRAN/. Click [Download R for Linux], then choose "ubuntu" in the next page. You will be directed to the download page where you will see prompts below.</p>
+<p>Choose your a mirror at https://mirror-hk.koddos.net/CRAN/. Click [Download R for Linux], then choose "ubuntu" in the next page. You will be directed to the download page where you will see prompts below.</p>
 <p>Run these lines (if root, remove sudo) to tell Ubuntu about the R binaries at CRAN.</p>
 <pre><code class="language-sh"># update indices
 sudo apt update -qq
@@ -123,116 +153,132 @@ wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sud
 # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
 sudo add-apt-repository &quot;deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/&quot;
 </code></pre>
-<h2 id="install-docker">Install Docker</h2>
-<p>Installation methods can be found exactly at https://docs.docker.com/engine/install/ubuntu/.
-You can install Docker Engine in different ways, depending on your needs:</p>
-<p>We install using the apt repository. Before you install Docker Engine for the first time on a new host machine, you need to set up the Docker repository. Afterward, you can install and update Docker from the repository.</p>
-<pre><code class="language-sh"># Set up the repository
-# Update the apt package index and install packages to allow apt to use a repository over HTTPS:
- sudo apt-get update
- sudo apt-get install ca-certificates curl gnupg
-
-# Add Docker’s official GPG key:
- sudo install -m 0755 -d /etc/apt/keyrings
- curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
- sudo chmod a+r /etc/apt/keyrings/docker.gpg
-
-# Use the following command to set up the repository:
- echo \
-  &quot;deb [arch=&quot;$(dpkg --print-architecture)&quot; signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  &quot;$(. /etc/os-release &amp;&amp; echo &quot;$VERSION_CODENAME&quot;)&quot; stable&quot; | \
-  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
-
-</code></pre>
-<h1 id="install-docker-engine">Install Docker Engine</h1>
-<pre><code class="language-sh"># Update the apt package index:
- sudo apt-get update
-
-# Install Docker Engine, containerd, and Docker Compose.
-# To install the latest version, run:
- sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-#Verify that the Docker Engine installation is successful by running the hello-world image.
- sudo docker run hello-world
-# This command downloads a test image and runs it in a container. When the container runs, it prints a confirmation message and exits.
-</code></pre>
-<p>sudo apt install build-essential</p>
-<p>sudo apt-get update --fix-missing &amp;&amp; \
+<p>Also, we need to install BiocManager (with its dependancy) to install DropletUtils from the Bioconductor repository.</p>
+<pre><code class="language-sh">sudo apt install build-essential
+sudo apt-get update --fix-missing &amp;&amp; \
 sudo apt-get install -y wget bzip2 ca-certificates \
     libglib2.0-0 libxext6 libsm6 libxrender1 curl grep sed dpkg libcurl4-openssl-dev libssl-dev libhdf5-dev \
     git mercurial subversion procps \
     libxml-libxml-perl pigz awscli uuid-runtime time tini
 sudo apt-get install libblas-dev liblapack-dev
-sudo apt-get install gfortran</p>
-<h1 id="need-sudo-to-install-packages-otherwise-error">need sudo to install packages otherwise error</h1>
-<p>sudo Rscript -e 'install.packages("BiocManager")'
-sudo Rscript -e 'BiocManager::install("DropletUtils")'</p>
-<h1 id="install-nextflow">Install Nextflow</h1>
-<h2 id="install-java">Install Java</h2>
-<p>sudo apt install default-jdk</p>
-<p>wget https://github.com/nextflow-io/nextflow/archive/refs/tags/v22.10.0.tar.gz
-tar xvf v22.10.0.tar.gz
-cd nextflow-22.10.0/
-echo "export PATH=/home/ubuntu/nextflow-22.10.0:\$PATH" &gt;&gt; ~/.bashrc</p>
-<p>sudo apt-get install -y graphviz jq</p>
-<h1 id="install-dropletutils">install DropletUtils</h1>
-<h1 id="install-samtools-need-following-dependencies-ncurses">Install samtools need following dependencies ncurses</h1>
-<p>sudo apt-get install libncurses5-dev
+sudo apt-get install gfortran
+# Need sudo to install packages otherwise error
+sudo Rscript -e 'install.packages(&quot;BiocManager&quot;)'
+sudo Rscript -e 'BiocManager::install(&quot;DropletUtils&quot;)'
+</code></pre>
+<h2 id="install-other-sequence-alignment-methods-for-vulture">Install other sequence alignment methods for Vulture</h2>
+<h3 id="install-star-and-samtools">Install STAR and samtools</h3>
+<p>STAR is the primary aligner for Vulture. We install STAR and samtools from the source code. The installation of STAR requires the installation of samtools. We install samtools first and then install STAR.</p>
+<pre><code class="language-sh">cd $HOME
+sudo apt-get install libncurses5-dev
 sudo apt-get install libbz2-dev
-sudo apt-get install liblzma-dev</p>
-<h1 id="dependenties-other-than-r-packages">dependenties other than R packages</h1>
-<p>wget https://github.com/alexdobin/STAR/archive/2.7.9a.tar.gz &amp;&amp; \
+sudo apt-get install liblzma-dev
+wget https://github.com/alexdobin/STAR/archive/2.7.9a.tar.gz &amp;&amp; \
 tar -xzf 2.7.9a.tar.gz &amp;&amp; \
-echo "export PATH=/home/ubuntu/STAR-2.7.9a/bin/Linux_x86_64_static:\$PATH" &gt;&gt; ~/.bashrc &amp;&amp; \
+echo &quot;export PATH=$HOME/STAR-2.7.9a/bin/Linux_x86_64_static:\$PATH&quot; &gt;&gt; ~/.bashrc &amp;&amp; \
 wget https://github.com/samtools/samtools/releases/download/1.13/samtools-1.13.tar.bz2 &amp;&amp; \
 tar -xf samtools-1.13.tar.bz2 &amp;&amp; \
 cd samtools-1.13 &amp;&amp; \
-./configure --prefix=/home/ubuntu/samtools
-make &amp;&amp; make install &amp;&amp; echo "export PATH=/home/ubuntu/samtools/bin:\$PATH" &gt;&gt; ~/.bashrc
+./configure --prefix=$HOME/samtools
+make &amp;&amp; make install &amp;&amp; echo &quot;export PATH=$HOME/samtools/bin:\$PATH&quot; &gt;&gt; ~/.bashrc
 . ~/.bashrc 
-cd $HOME</p>
-<p>sudo apt-get install software-properties-common
+cd $HOME
+</code></pre>
+<p>KB is the second aligner for Vulture. KB is a python based package. We install KB from the source code.</p>
+<pre><code class="language-sh">sudo apt-get install software-properties-common
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt-get update
 sudo apt-get install python3.8
 sudo apt-get install python3-pip
-pip install kb-python boto3 awscli</p>
-<h1 id="download-all-files-include-whitelist-in-vmh_">download all files include whitelist in vmh_</h1>
-<p>mkdir vmh_genome_dir
+pip install kb-python boto3 awscli
+</code></pre>
+<h2 id="download-the-reference-genome-and-annotation-files-for-vulture">Download the reference genome and annotation files for Vulture</h2>
+<p>We have provied the latest human-microbes-virus genome for the Vulture pipeline. The reference genome and annotation files are stored in the S3 bucket. We can use the wget to download the files. Also, barcode whitelist files are provided in the S3 bucket. We can download the barcode whitelist files for the 10X Genomics platform.</p>
+<pre><code class="language-sh">mkdir vmh_genome_dir
 cd vmh_genome_dir
 wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf
 wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa
 wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf
 wget https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa
 wget https://vulture-reference.s3.ap-east-1.amazonaws.com/3M-february-2018.txt
-wget https://vulture-reference.s3.ap-east-1.amazonaws.com/737K-august-2016.txt</p>
-<p>cd $HOME
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/737K-august-2016.txt
+</code></pre>
+<h2 id="download-the-example-data-for-vulture">Download the example data for Vulture</h2>
+<p>We have provided the example data for the Vulture pipeline. The example data are stored in the S3 bucket. We can use the wget to download the files.</p>
+<pre><code class="language-sh">cd $HOME
 wget https://vulture-reference.s3.ap-east-1.amazonaws.com/example/SRR12570425_1.fastq.gz
-wget https://vulture-reference.s3.ap-east-1.amazonaws.com/example/SRR12570425_2.fastq.gz</p>
-<p>cd $HOME</p>
-<p>git clone https://github.com/holab-hku/Vulture.git</p>
-<h1 id="running-command">running command</h1>
-<h1 id="mkdir-output-directory-otherwise-error">mkdir output directory otherwise error</h1>
-<p>mkdir $HOME/Vulture_output
-mkdir $HOME/Vulture_output/SRR12570425</p>
-<p>perl $HOME/Vulture/scvh_map_reads.pl -t 12 -o $HOME/Vulture_output/SRR12570425 $HOME/vmh_genome_dir $HOME/SRR12570425_2.fastq.gz $HOME/SRR12570425_1.fastq.gz --soloStrand "Forward" --whitelist "$HOME/vmh_genome_dir/3M-february-2018.txt" --soloCBlen 16 --soloUMIstart 1 --soloUMIstart 17 --soloUMIlen 12 -soloUMIlen 12</p>
-<h1 id="_1"></h1>
-<p>Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425</p>
-<h1 id="_2"></h1>
-<p>perl $HOME/Vulture/scvh_analyze_bam.pl $HOME/Vulture_output/SRR12570425</p>
-<h1 id="download-nextflow">Download nextflow</h1>
-<p>nextflow download 22.10 package the tar.gz pack from github, untar , run ./nextflow in the package, then do export echo to path</p>
-<h1 id="install-github-2210-to-avoid-error">install github  22.10 to avoid error</h1>
-<p>wget https://github.com/nextflow-io/nextflow/archive/refs/tags/v22.10.0.tar.gz
-tar xvf v22.10.0.tar.gz
-cd nextflow-22.10.0/
-echo "export PATH=/home/ubuntu/nextflow-22.10.0:\$PATH" &gt;&gt; ~/.bashrc</p>
-<h1 id="run-on-local-computer-using-nextflow">run on local computer using nextflow</h1>
-<p>git checkout revision
-nextflow run scvh_docker_local.nf -profile batchlocal -params-file params.yaml --outdir=/home/ubuntu/Vulture_output/nextflow -with-report nextflow_report_$(date +%s).html -bg &amp;&gt;&gt; nextflow_log_$(d
-ate +%s).log</p>
-<h2 id="screenshot-of-the-settings-of-nextflowconfig">screenshot of the settings of nextflow.config</h2>
-<h2 id="screenshot-of-the-settings-of-paramsyaml">screenshot of the settings of params.yaml</h2>
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/example/SRR12570425_2.fastq.gz
+</code></pre>
+<h2 id="run-vulture">Run Vulture</h2>
+<h3 id="clone-the-vulture-repository">Clone the Vulture repository</h3>
+<p>We can run Vulture with the following command. The output files will be stored in the output directory. The output directory should be created before running the Vulture pipeline. We need to clone the Vulture repository from the GitHub repository. We can run the Vulture pipeline with the following command.</p>
+<pre><code class="language-sh">cd $HOME
+git clone https://github.com/holab-hku/Vulture.git
+# running command
+# mkdir output directory otherwise error
+mkdir $HOME/Vulture_output
+mkdir $HOME/Vulture_output/SRR12570425
+</code></pre>
+<h3 id="run-vulture-with-the-example-data">Run Vulture with the example data</h3>
+<p>We can run Vulture with the following command. The output files will be stored in the output directory. The output directory should be created before running the Vulture pipeline. We can run the Vulture pipeline with the following command.</p>
+<pre><code class="language-sh"># Run sequence alignment commands with specific parameters
+perl $HOME/Vulture/scvh_map_reads.pl -t 12 -o $HOME/Vulture_output/SRR12570425 $HOME/vmh_genome_dir $HOME/SRR12570425_2.fastq.gz $HOME/SRR12570425_1.fastq.gz --soloStrand &quot;Forward&quot; --whitelist &quot;$HOME/vmh_genome_dir/3M-february-2018.txt&quot; --soloCBlen 16 --soloUMIstart 1 --soloUMIstart 17 --soloUMIlen 12 -soloUMIlen 12
+
+# Run the scvh_filter_matrix.r script to filter the matrix
+Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425
+
+# Run the scvh_analyze_bam.pl script to analyze the bam file
+perl $HOME/Vulture/scvh_analyze_bam.pl $HOME/Vulture_output/SRR12570425
+
+</code></pre>
+<h2 id="general-usage"><a name="gen_usages"></a>General usage</h2>
+<p>Map 10x scRNA-seq reads to the viral (and microbial) host reference set using STARsolo, CellRanger, Kallisto|bustools, or Salmon|Alevin. </p>
+<h3 id="0-prerequiresits-to-download-genome-files">0. Prerequiresits to download genome files</h3>
+<p>You need to download virus genome, prokaryotes genome, combined genome and virus combined genome in the following link and save them in a folder as "vmh_genome_dir" to be used in the next step.
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf">human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf</a>
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa">human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa</a>
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf">human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf</a>
+<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa">human_host_viruses.viruSITE.with_hg38.fa</a></p>
+<h3 id="1-map-10x-scrna-seq-reads-to-the-viral-microbial-host-reference-set">1. Map 10x scRNA-seq reads to the viral microbial host reference set:</h3>
+<pre><code class="language-sh">Usage: scvh_map_reads.pl [Options] &lt;vmh_genome_dir&gt; &lt;R2&gt; &lt;R1&gt; or &lt;vmh_genome_dir&gt; &lt;.bam file&gt;
+
+Options:                                                                                                                                Defaults
+-o/--output-dir &lt;string&gt;   the output directory                                                                                          [./]   
+-t/--threads &lt;int&gt;         number of threads to run alignment with                                                                       [&lt;1&gt;]  
+-d/--database &lt;string&gt;     select virus or virus and prokaryotes database, can be 'viruSITE' or 'viruSITE.NCBIprokaryotes'               [&lt;viruSITE.NCBIprokaryotes&gt;]
+-e/--exe &lt;string&gt;          executable command or stand alone executable path of the alignment tool                                       [&lt;&gt;]
+-s/--soloStrand &lt;string&gt;   STARsolo param: Reverse or Forward used for 10x 5' or 3' protocol, respectively                               [&lt;Reverse&gt;]
+-w/--whitelist &lt;string&gt;    STARsolo param --soloCBwhitelist                                                                              [&lt;&quot;vmh_genome_dir&quot;/737K-august-2016.txt&gt;]
+-r/--ram &lt;int&gt;             limitation of RAM usage. For STARsolo, param: limitGenomeGenerateRAM, limitBAMsortRAM unit by GB              [&lt;128&gt;]
+-f/--soloFeature &lt;string&gt; STARsolo param:  See --soloFeatures in STARsolo manual                                                         [&lt;Gene&gt;]
+-ot/--outSAMtype &lt;string&gt;  STARsolo param:  See --outSAMtype in STARsolo manual                                                          [&lt;BAM SortedByCoordinate&gt;]
+-mm/--soloMultiMappers &lt;string&gt;  STARsolo param:  See --soloMultiMappers in STARsolo manual                                              [&lt;EM&gt;]
+-a/--alignment &lt;string&gt;    Select alignment methods: 'STAR', 'KB', 'Alevin', or 'CellRanger'                                             [&lt;STAR&gt;]
+-v/--technology &lt;string&gt;   KB param:  Single-cell technology used (`kb --list` to view)                                                  [&lt;10XV2&gt;]
+--soloCBstart &lt;string&gt;  STARsolo param:  See --soloCBstart in STARsolo manual                                                            [&lt;1&gt;]
+--soloCBlen &lt;string&gt;  STARsolo param:  See --soloCBlen in STARsolo manual                                                                [&lt;16&gt;]
+--soloUMIstart &lt;string&gt;  STARsolo param:  See --soloUMIstart in STARsolo manual                                                          [&lt;17&gt;]
+--soloUMIlen &lt;string&gt;  STARsolo param:  See --soloUMIlen in STARsolo manual                                                              [&lt;10&gt;]
+--soloInputSAMattrBarcodeSeq &lt;string&gt;  STARsolo param:  See --soloInputSAMattrBarcodeSeq in STARsolo manual                              [&lt;CR UR&gt;]
+</code></pre>
+<p>For fastqs alignment option 'STAR', 'KB', and 'Alevin', run:</p>
+<pre><code class="language-sh">perl scvh_map_reads.pl -t num_threads -o output_dir vmh_genome_dir R2.fastq.gz R1.fastq.gz
+</code></pre>
+<p>where <em>-t</em> is a user-specified integer indicating number of threads to run with, <em>output_dir</em> is a user-specified directory to place the outputs, <em>vmh_genome_dir</em> is a pre-generated viral (and microbial) host (human) reference set directory, <em>R2.fastq.gz</em> and <em>R1.fastq.gz</em> are input 10x scRNA-seq reads.</p>
+<p>For fastqs option 'CellRanger', run:</p>
+<pre><code class="language-sh">perl scvh_map_reads.pl -t num_threads -o output_dir vmh_genome_dir sample fastqs
+</code></pre>
+<p>where <em>sample</em> and <em>fastqs</em> are two cellranger arguments: <em>--sample</em> and <em>--fastqs</em>. See documentation in <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count">cellranger count</a> to infer rules of fastq and sample naming.</p>
+<p>For bam files, we only support STARsolo, run:</p>
+<pre><code class="language-sh">perl scvh_map_reads.pl -t num_threads -o output_dir vmh_genome_dir your_bam_file.bam
+</code></pre>
+<h3 id="2-filter-the-mapped-umis-using-emptydrops-to-get-the-viral-and-microbial-host-filtered-umi-counts-matrix-and-also-output-viral-genes-and-barcodes-info-files">2. Filter the mapped UMIs using EmptyDrops to get the viral (and microbial) host filtered UMI counts matrix and also output viral genes and barcodes info files:</h3>
+<pre><code class="language-sh">Usage: Rscript scvh_filter_matrix.r output_dir sample_name
+</code></pre>
+<p>where <em>sample_name</em> is an optional user-specified tag to be used as a prefix for the output files.</p>
+<h3 id="3-optional-and-starsolo-or-cellranger-only-output-some-quality-control-criteria-of-the-post-emptydrops-viral-microbial-supporting-reads-in-the-bam-file">3. (Optional, and STARsolo or CellRanger only) Output some quality control criteria of the post-EmptyDrops viral microbial supporting reads in the BAM file</h3>
+<pre><code class="language-sh">Usage: perl scvh_analyze_bam.pl output_dir sample_name
+</code></pre>
               
             </div>
           </div><footer>
