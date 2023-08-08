@@ -52,7 +52,8 @@ After the mkref job is done, you need to edit line in "nextflow/nextflow.config"
         params.humagtf = 'hg38.unique_gene_names.gtf'
         params.viruSITE = 'viruSITE_human_host.txt'
         params.prokaryotes = 'prokaryotes.csv'
-		params.outdir = "/home/holab/genome"  
+		params.outdir = "/home/holab/genome"
+    }  
 ...
 
 ```
