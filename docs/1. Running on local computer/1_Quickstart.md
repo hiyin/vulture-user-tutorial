@@ -27,6 +27,15 @@ Codename:       jammy
 * Kallisto/bustools >= 0.25.1 or
 * salmon/alevin >= v1.4.0
 
+## For a quick start, you can install all above listed dependencies via pre-prepared bash scripts
+Download [vulture-quickstart.sh]https://vulture-reference.s3.ap-east-1.amazonaws.com/install-vulture-dependencies-local.sh to install every dependencies in one click.
+
+```sh
+# run quickstart script
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh 
+bash ./vulture-quickstart.sh
+```
+
 ## Install Java and Nextflow
 
 Nextflow is a workflow manager that enables the development of portable and reproducible workflows. It supports deploying workflows on a variety of execution platforms including local, HPC schedulers, AWS Batch, Google Cloud Life Sciences, Kubernetes, Slurm, Singularity, PBS, LSF, among others. It also supports most popular cluster schedulers including SGE, SLURM, PBS, LSF, IBM Spectrum LSF, Sun Grid Engine, HTCondor, among others.
@@ -180,6 +189,8 @@ You need to download virus genome, prokaryotes genome, combined genome and virus
 [human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa](https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa)
 [human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf](https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf)
 [human_host_viruses.viruSITE.with_hg38.fa](https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa)
+[3M-feburary-2018.txt]https://vulture-reference.s3.ap-east-1.amazonaws.com/3M-february-2018.txt
+[737k-august-2016.txt]https://vulture-reference.s3.ap-east-1.amazonaws.com/737K-august-2016.txt
 
 ### 1. Map 10x scRNA-seq reads to the viral microbial host reference set:
 
