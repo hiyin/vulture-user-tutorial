@@ -44,10 +44,15 @@ After the mkref job is done, you need to edit line in "nextflow/nextflow.config"
 
 ```shell
 ...
-mkref {
-process.container = 'public.ecr.aws/b6a4h2a6/scvh_mkref:latest'
-params.ref = '$HOME/humangenome/'
-}
+    mkref {
+        process.container = 'public.ecr.aws/b6a4h2a6/scvh_mkref:latest'
+		docker.enabled = true
+        params.ref = '/home/holab/ref'
+        params.humanfa = 'hg38.fa'
+        params.humagtf = 'hg38.unique_gene_names.gtf'
+        params.viruSITE = 'viruSITE_human_host.txt'
+        params.prokaryotes = 'prokaryotes.csv'
+		params.outdir = "/home/holab/genome"  
 ...
 
 ```
