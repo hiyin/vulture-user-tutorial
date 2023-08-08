@@ -19,7 +19,6 @@ Codename:       jammy
 # Install denpendency for Vulture
 ## <a name="require"></a>Requirements
 * Input data: 10x Chromium scRNA-seq reads
-* Nextflow <= v22.10.0
 * R >= v4.0.0
 * DropletUtils >= v1.10.2
 * Samtools >= v1.13

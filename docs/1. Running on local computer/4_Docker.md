@@ -15,8 +15,6 @@ Release:        22.04
 Codename:       jammy
 ```
 
-## Install docker    
-
 ## Install Docker
 Installation methods can be found exactly at https://docs.docker.com/engine/install/ubuntu/.
 You can install Docker Engine in different ways, depending on your needs:
@@ -43,6 +41,9 @@ We install using the apt repository. Before you install Docker Engine for the fi
 ```
 
 # Install Docker Engine
+
+We install the latest version of Docker Engine and containerd. The we test that your installation is working correctly.
+
 ```sh
 # Update the apt package index:
  sudo apt-get update
@@ -87,12 +88,12 @@ soloFeatures: "GeneFull"
 inputformat: "fastq"
 sampleSubfix1: "_1"
 sampleSubfix2: "_2"
-ref: [The full path of your reference genome direcory, e.g. /home/user/data/references]
-samplepath: [The full path of your fastq samples, e.g /home/user/data/fastq]
+ref: [The full path of your reference genome direcory, e.g. $HOME/data/references]
+samplepath: [The full path of your fastq samples, e.g $HOME/data/fastq]
 read2urls:
-- [The full path of your _2.fastq.gz file, e.g. /home/user/data/fastq/SRR12570125_2.fastq.gz]
+- [The full path of your _2.fastq.gz file, e.g. $HOME/data/fastq/SRR12570125_2.fastq.gz]
 read1urls:
-- [The full path of your _1.fastq.gz file, e.g. /home/user/data/fastq/SRR12570125_1.fastq.gz]
+- [The full path of your _1.fastq.gz file, e.g.$HOME/fastq/SRR12570125_1.fastq.gz]
 reads:
 - [An unique ID of your sample, e.g SRR12570125]
 ...
@@ -101,7 +102,7 @@ reads:
 Execute the command below to start the main analysis of Vulture.
 
 ```shell
-cd vulture/nextflow
+cd $HOME/Vulture/nextflow
 nextflow run scvh_docker_local.nf -profile dockerlocal -params-file params.yaml --outdir=your_output_directory -with-report nextflow_report_$(date +%s).html -bg &>> nextflow_log_$(date +%s).log
 ```
 
@@ -146,8 +147,3 @@ sampleSubfix2    : _2
 [88/9dd405] Submitted process > Map (1)
 
 ```
-
-<div class="code-example" markdown="1">
-[Previous Step](https://juychen.github.io/docs/3_Nextflow/NextflowInstall.html){: .btn }
-[Next Step](https://juychen.github.io/docs/6_Local/Localusage.html){: .btn .btn-purple }
-</div>

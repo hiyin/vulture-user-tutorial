@@ -5,17 +5,8 @@ parent: Localrun
 nav_order: 3
 ---
 
-# Install the dependencies for the pipeline
-PLACE HOLDER 2
-## <a name="require"></a>Requirements
-* Input data: 10x Chromium scRNA-seq reads
-* DropletUtils >= v1.10.2
-* STAR >= v2.7.9a or
-* cellranger >= 6.0.0 or
-* Kallisto/bustools >= 0.25.1 or
-* salmon/alevin >= v1.4.0
-* Nextflow >= v21.04.3
 
+# Run Vulture on local machines using Nextflow
 The instructions are tested on the following system:
 
 ```shell
@@ -24,6 +15,36 @@ Description:    Ubuntu 22.04.2 LTS
 Release:        22.04
 Codename:       jammy
 ```
+## <a name="require"></a>Requirements
+* Input data: 10x Chromium scRNA-seq reads
+* Nextflow <= v22.10.0
+* R >= v4.0.0
+* DropletUtils >= v1.10.2
+* Samtools >= v1.13
+* STAR >= v2.7.9a or
+* cellranger >= 6.0.0 or
+* Kallisto/bustools >= 0.25.1 or
+* salmon/alevin >= v1.4.0
+
+## Install Java and Nextflow
+
+
+
+Nextflow is a workflow manager that enables the development of portable and reproducible workflows. It supports deploying workflows on a variety of execution platforms including local, HPC schedulers, AWS Batch, Google Cloud Life Sciences, Kubernetes, Slurm, Singularity, PBS, LSF, among others. It also supports most popular cluster schedulers including SGE, SLURM, PBS, LSF, IBM Spectrum LSF, Sun Grid Engine, HTCondor, among others.
+We apply Nextflow v22.10.tar.gz in this tutorial because it is the latest version that is compatible with the Vulture pipeline.
+
+```sh
+## Install Java
+sudo apt install default-jdk
+
+## Install nextflow 22.10.0
+wget https://github.com/nextflow-io/nextflow/archive/refs/tags/v22.10.0.tar.gz
+tar xvf v22.10.0.tar.gz
+cd nextflow-22.10.0/
+echo "export PATH=/home/ubuntu/nextflow-22.10.0:\$PATH" >> ~/.bashrc
+sudo apt-get install -y graphviz jq
+```
+
 
 ## Specify the local envrionment in the Nextflow config file
 
