@@ -56,6 +56,8 @@ We then edit the mkref profile in the Vulture/nextflow/nextflow.config:
         params.viruSITE = 'viruSITE_human_host.txt'
         params.prokaryotes = 'prokaryotes.csv'
 		params.outdir = '[The full path of you pull your reference genome output, e.g. /home/user/data/genome]'
+        docker.fixOwnership = true
+        docker.containerOptions = "--user root"
     }  
 ...
 
