@@ -28,6 +28,8 @@ Codename:       jammy
 * salmon/alevin >= v1.4.0
 
 ## For a quick start, you can install all above listed dependencies via pre-prepared bash scripts
+Watch quickstart video at Youtube [Vulture - Quickstart](https://youtu.be/aGCMi87tVUI)
+
 Download [vulture-quickstart.sh](https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh) to install every dependencies in one click.
 
 ```sh
