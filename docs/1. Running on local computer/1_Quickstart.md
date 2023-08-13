@@ -29,7 +29,7 @@ Codename:       jammy
 
 ## Quickstart
 Watch Vulture user tutorial video at Youtube below: 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/yO72jvkGE6w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_APEaWSqngc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 Run [vulture-quickstart.sh](https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh) to install all dependencies in one command line.
 
