@@ -16,7 +16,7 @@ Release:        22.04
 Codename:       jammy
 ```
 
-# Install denpendency for Vulture
+# Dependency for Vulture
 ## <a name="require"></a>Requirements
 * Input data: 10x Chromium scRNA-seq reads
 * R >= v4.0.0
@@ -27,15 +27,40 @@ Codename:       jammy
 * Kallisto/bustools >= 0.25.1 or
 * salmon/alevin >= v1.4.0
 
-## For a quick start, you can install all above listed dependencies via pre-prepared bash scripts
-Watch quickstart video at Youtube [Vulture - Quickstart](https://youtu.be/aGCMi87tVUI)
+## Quickstart
+Watch Vulture user tutorial video at Youtube below: 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/yO72jvkGE6w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-Download [vulture-quickstart.sh](https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh) to install every dependencies in one click.
+Run [vulture-quickstart.sh](https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh) to install all dependencies in one command line.
 
+Run [vulture-preparation.sh](https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-preparation.sh) to download required input data and config files for Vulture to run in one command line.
+
+Here is a complete script to reproduce a local successful Vulture pipeline runnning:
 ```sh
-# run quickstart script
-wget https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh 
-bash ./vulture-quickstart.sh
+# Make sure run scripts in your HOME directory
+cd $HOME
+# Run quickstart script
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh
+bash vulture-quickstart.sh
+# Run quickstart script
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-preparation.sh
+bash vulture-preparation.sh
+
+### Test software installation
+STAR --version
+samtools --version
+nextflow help # this will auto-update once run the first time
+java --version
+R --version
+Rscript -e "system.file(package='DropletUtils')"
+docker run hello-world
+
+### Command to reproduce all Vulture features
+perl $HOME/Vulture/scvh_map_reads.pl -t 16 -o $HOME/output/local $HOME/vmh_genome_dir $HOME/input/fastq/SRR12570425_2.fastq.gz $HOME/input/fastq/SRR12570425_1.fastq.gz --soloStrand "Forward" --whitelist "$HOME/vmh_genome_dir/3M-february-2018.txt" --soloCBlen 16 --soloUMIstart 1 --soloUMIstart 17 --soloUMIlen 12 -soloUMIlen 12
+Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/output/local
+perl $HOME/Vulture/scvh_analyze_bam.pl $HOME/output/local
+nextflow run $HOME/Vulture/nextflow/scvh_docker_local.nf -profile batchlocal -params-file $HOME/Vulture/nextflow/params.yaml --outdir=/home/ubuntu/output/nextflow 
+nextflow run $HOME/Vulture/nextflow/scvh_mkref.nf -profile mkref
 ```
 
 ## Install Java and Nextflow
