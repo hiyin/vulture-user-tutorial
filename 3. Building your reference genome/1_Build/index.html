@@ -152,6 +152,8 @@ hg38.fa  hg38.unique_gene_names.gtf  prokaryotes.csv  viruSITE_human_host.txt
         params.viruSITE = 'viruSITE_human_host.txt'
         params.prokaryotes = 'prokaryotes.csv'
         params.outdir = '[The full path of you pull your reference genome output, e.g. /home/user/data/genome]'
+        docker.fixOwnership = true
+        docker.containerOptions = &quot;--user root&quot;
     }  
 ...
 

@@ -111,7 +111,7 @@ Description:    Ubuntu 22.04.2 LTS
 Release:        22.04
 Codename:       jammy
 </code></pre>
-<h1 id="install-denpendency-for-vulture">Install denpendency for Vulture</h1>
+<h1 id="dependency-for-vulture">Dependency for Vulture</h1>
 <h2 id="requirements"><a name="require"></a>Requirements</h2>
 <ul>
 <li>Input data: 10x Chromium scRNA-seq reads</li>
@@ -123,12 +123,37 @@ Codename:       jammy
 <li>Kallisto/bustools &gt;= 0.25.1 or</li>
 <li>salmon/alevin &gt;= v1.4.0</li>
 </ul>
-<h2 id="for-a-quick-start-you-can-install-all-above-listed-dependencies-via-pre-prepared-bash-scripts">For a quick start, you can install all above listed dependencies via pre-prepared bash scripts</h2>
-<p>Watch quickstart video at Youtube <a href="https://youtu.be/aGCMi87tVUI">Vulture - Quickstart</a></p>
-<p>Download <a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh">vulture-quickstart.sh</a> to install every dependencies in one click.</p>
-<pre><code class="language-sh"># run quickstart script
-wget https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh 
-bash ./vulture-quickstart.sh
+<h2 id="quickstart">Quickstart</h2>
+<p>Watch Vulture user tutorial video at Youtube below: </p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_APEaWSqngc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+<p>Run <a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh">vulture-quickstart.sh</a> to install all dependencies in one command line.</p>
+<p>Run <a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-preparation.sh">vulture-preparation.sh</a> to download required input data and config files for Vulture to run in one command line.</p>
+<p>Here is a complete script to reproduce a local successful Vulture pipeline runnning:</p>
+<pre><code class="language-sh"># Make sure run scripts in your HOME directory
+cd $HOME
+# Run quickstart script
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-quickstart.sh
+bash vulture-quickstart.sh
+# Run quickstart script
+wget https://vulture-reference.s3.ap-east-1.amazonaws.com/vulture-preparation.sh
+bash vulture-preparation.sh
+
+### Test software installation
+STAR --version
+samtools --version
+nextflow help # this will auto-update once run the first time
+java --version
+R --version
+Rscript -e &quot;system.file(package='DropletUtils')&quot;
+docker run hello-world
+
+### Command to reproduce all Vulture features
+perl $HOME/Vulture/scvh_map_reads.pl -t 16 -o $HOME/output/local $HOME/vmh_genome_dir $HOME/input/fastq/SRR12570425_2.fastq.gz $HOME/input/fastq/SRR12570425_1.fastq.gz --soloStrand &quot;Forward&quot; --whitelist &quot;$HOME/vmh_genome_dir/3M-february-2018.txt&quot; --soloCBlen 16 --soloUMIstart 1 --soloUMIstart 17 --soloUMIlen 12 -soloUMIlen 12
+Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/output/local
+perl $HOME/Vulture/scvh_analyze_bam.pl $HOME/output/local
+nextflow run $HOME/Vulture/nextflow/scvh_docker_local.nf -profile batchlocal -params-file $HOME/Vulture/nextflow/params.yaml --outdir=/home/ubuntu/output/nextflow 
+nextflow run $HOME/Vulture/nextflow/scvh_mkref.nf -profile mkref
 </code></pre>
 <h2 id="install-java-and-nextflow">Install Java and Nextflow</h2>
 <p>Nextflow is a workflow manager that enables the development of portable and reproducible workflows. It supports deploying workflows on a variety of execution platforms including local, HPC schedulers, AWS Batch, Google Cloud Life Sciences, Kubernetes, Slurm, Singularity, PBS, LSF, among others. It also supports most popular cluster schedulers including SGE, SLURM, PBS, LSF, IBM Spectrum LSF, Sun Grid Engine, HTCondor, among others.
