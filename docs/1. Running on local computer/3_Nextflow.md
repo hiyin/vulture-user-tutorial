@@ -73,6 +73,7 @@ soloFeatures: "GeneFull"
 inputformat: "fastq"
 sampleSubfix1: "_1"
 sampleSubfix2: "_2"
+codebase: [The path of your vulture directory, e.g. /home/user/vulture]
 ref: [The full path of your reference genome direcory, e.g. /home/user/data/references]
 samplepath: [The full path of your fastq samples, e.g /home/user/data/fastq]
 read2urls:

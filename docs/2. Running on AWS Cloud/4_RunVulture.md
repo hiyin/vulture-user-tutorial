@@ -26,8 +26,6 @@ Clone the source code of Vulture into your local computer
 git clone https://github.com/holab-hku/Vulture.git
 # change into directory below
 cd Vulture/nextflow
-# checkout the branch below for most updated code
-git checkout cloud-new-junyi
 ```
 
 ## Create S3 Bucket to store results
