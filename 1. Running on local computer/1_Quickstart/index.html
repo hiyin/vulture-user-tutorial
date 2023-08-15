@@ -50,7 +50,7 @@
     <ul class="current">
     </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../2_Commandline/">Command line</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../2_Commandline/">Command line tool parameters</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../3_Nextflow/">Nextflow</a>
                   </li>
@@ -263,62 +263,12 @@ Rscript $HOME/Vulture/scvh_filter_matrix.r $HOME/Vulture_output/SRR12570425
 perl $HOME/Vulture/scvh_analyze_bam.pl $HOME/Vulture_output/SRR12570425
 
 </code></pre>
-<h2 id="general-usage"><a name="gen_usages"></a>General usage</h2>
-<p>Map 10x scRNA-seq reads to the viral (and microbial) host reference set using STARsolo, CellRanger, Kallisto|bustools, or Salmon|Alevin. </p>
-<h3 id="0-prerequiresits-to-download-genome-files">0. Prerequiresits to download genome files</h3>
-<p>You need to download virus genome, prokaryotes genome, combined genome and virus combined genome in the following link and save them in a folder as "vmh_genome_dir" to be used in the next step.
-<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf">human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.removed_amb_viral_exon.gtf</a>
-<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa">human_host_viruses_microbes.viruSITE.NCBIprokaryotes.with_hg38.fa</a>
-<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf">human_host_viruses.viruSITE.with_hg38.removed_amb_viral_exon.gtf</a>
-<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/human_host_viruses.viruSITE.with_hg38.fa">human_host_viruses.viruSITE.with_hg38.fa</a>
-<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/3M-february-2018.txt">3M-feburary-2018.txt</a>
-<a href="https://vulture-reference.s3.ap-east-1.amazonaws.com/737K-august-2016.txt">737k-august-2016.txt</a></p>
-<h3 id="1-map-10x-scrna-seq-reads-to-the-viral-microbial-host-reference-set">1. Map 10x scRNA-seq reads to the viral microbial host reference set:</h3>
-<pre><code class="language-sh">Usage: scvh_map_reads.pl [Options] &lt;vmh_genome_dir&gt; &lt;R2&gt; &lt;R1&gt; or &lt;vmh_genome_dir&gt; &lt;.bam file&gt;
-
-Options:                                                                                                                                Defaults
--o/--output-dir &lt;string&gt;   the output directory                                                                                          [./]   
--t/--threads &lt;int&gt;         number of threads to run alignment with                                                                       [&lt;1&gt;]  
--d/--database &lt;string&gt;     select virus or virus and prokaryotes database, can be 'viruSITE' or 'viruSITE.NCBIprokaryotes'               [&lt;viruSITE.NCBIprokaryotes&gt;]
--e/--exe &lt;string&gt;          executable command or stand alone executable path of the alignment tool                                       [&lt;&gt;]
--s/--soloStrand &lt;string&gt;   STARsolo param: Reverse or Forward used for 10x 5' or 3' protocol, respectively                               [&lt;Reverse&gt;]
--w/--whitelist &lt;string&gt;    STARsolo param --soloCBwhitelist                                                                              [&lt;&quot;vmh_genome_dir&quot;/737K-august-2016.txt&gt;]
--r/--ram &lt;int&gt;             limitation of RAM usage. For STARsolo, param: limitGenomeGenerateRAM, limitBAMsortRAM unit by GB              [&lt;128&gt;]
--f/--soloFeature &lt;string&gt; STARsolo param:  See --soloFeatures in STARsolo manual                                                         [&lt;Gene&gt;]
--ot/--outSAMtype &lt;string&gt;  STARsolo param:  See --outSAMtype in STARsolo manual                                                          [&lt;BAM SortedByCoordinate&gt;]
--mm/--soloMultiMappers &lt;string&gt;  STARsolo param:  See --soloMultiMappers in STARsolo manual                                              [&lt;EM&gt;]
--a/--alignment &lt;string&gt;    Select alignment methods: 'STAR', 'KB', 'Alevin', or 'CellRanger'                                             [&lt;STAR&gt;]
--v/--technology &lt;string&gt;   KB param:  Single-cell technology used (`kb --list` to view)                                                  [&lt;10XV2&gt;]
---soloCBstart &lt;string&gt;  STARsolo param:  See --soloCBstart in STARsolo manual                                                            [&lt;1&gt;]
---soloCBlen &lt;string&gt;  STARsolo param:  See --soloCBlen in STARsolo manual                                                                [&lt;16&gt;]
---soloUMIstart &lt;string&gt;  STARsolo param:  See --soloUMIstart in STARsolo manual                                                          [&lt;17&gt;]
---soloUMIlen &lt;string&gt;  STARsolo param:  See --soloUMIlen in STARsolo manual                                                              [&lt;10&gt;]
---soloInputSAMattrBarcodeSeq &lt;string&gt;  STARsolo param:  See --soloInputSAMattrBarcodeSeq in STARsolo manual                              [&lt;CR UR&gt;]
-</code></pre>
-<p>For fastqs alignment option 'STAR', 'KB', and 'Alevin', run:</p>
-<pre><code class="language-sh">perl scvh_map_reads.pl -t num_threads -o output_dir vmh_genome_dir R2.fastq.gz R1.fastq.gz
-</code></pre>
-<p>where <em>-t</em> is a user-specified integer indicating number of threads to run with, <em>output_dir</em> is a user-specified directory to place the outputs, <em>vmh_genome_dir</em> is a pre-generated viral (and microbial) host (human) reference set directory, <em>R2.fastq.gz</em> and <em>R1.fastq.gz</em> are input 10x scRNA-seq reads.</p>
-<p>For fastqs option 'CellRanger', run:</p>
-<pre><code class="language-sh">perl scvh_map_reads.pl -t num_threads -o output_dir vmh_genome_dir sample fastqs
-</code></pre>
-<p>where <em>sample</em> and <em>fastqs</em> are two cellranger arguments: <em>--sample</em> and <em>--fastqs</em>. See documentation in <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count">cellranger count</a> to infer rules of fastq and sample naming.</p>
-<p>For bam files, we only support STARsolo, run:</p>
-<pre><code class="language-sh">perl scvh_map_reads.pl -t num_threads -o output_dir vmh_genome_dir your_bam_file.bam
-</code></pre>
-<h3 id="2-filter-the-mapped-umis-using-emptydrops-to-get-the-viral-and-microbial-host-filtered-umi-counts-matrix-and-also-output-viral-genes-and-barcodes-info-files">2. Filter the mapped UMIs using EmptyDrops to get the viral (and microbial) host filtered UMI counts matrix and also output viral genes and barcodes info files:</h3>
-<pre><code class="language-sh">Usage: Rscript scvh_filter_matrix.r output_dir sample_name
-</code></pre>
-<p>where <em>sample_name</em> is an optional user-specified tag to be used as a prefix for the output files.</p>
-<h3 id="3-optional-and-starsolo-or-cellranger-only-output-some-quality-control-criteria-of-the-post-emptydrops-viral-microbial-supporting-reads-in-the-bam-file">3. (Optional, and STARsolo or CellRanger only) Output some quality control criteria of the post-EmptyDrops viral microbial supporting reads in the BAM file</h3>
-<pre><code class="language-sh">Usage: perl scvh_analyze_bam.pl output_dir sample_name
-</code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../.." class="btn btn-neutral float-left" title="Welcome"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../2_Commandline/" class="btn btn-neutral float-right" title="Command line">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../2_Commandline/" class="btn btn-neutral float-right" title="Command line tool parameters">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
