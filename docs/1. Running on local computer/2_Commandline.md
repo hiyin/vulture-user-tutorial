@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Command line
+title: Command line tool parameters
 parent: Localrun
 nav_order: 2
 ---
 
-# Create Batch Compute Environmnet
+# Detailed usage for the Vulture command line tool parameters
 
 ## <a name="require"></a>Requirements
 * Input data: 10x Chromium scRNA-seq reads
